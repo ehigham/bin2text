@@ -7,6 +7,9 @@
 #include <float.h>
 #include "run.h"
 #include "string.h"
+#include <stdint.h>
+#include "tuple.h"
+#include <stdlib.h>
 
 #ifdef DELTA_PREC
 #define PRINT_PRC_D "%.10Lf%c"
@@ -114,6 +117,55 @@ int get_header(FILE* fbin, int *d, int *n_vars, unsigned long *n_tuples, double 
         return -1;
     }
     return 0;
+}
+
+// Thomas: Code for out1/2/3/4 TODO: test it =p
+
+typedef int32_t var_t;
+struct tuple *lookup_tuple;
+struct var *lookup_var;
+
+void init_lookup_tables(FILE * fbin, const int nvar, const unsigned long ntuples)
+{
+  lookup_tuple = (struct tuple*) calloc(sizeof(struct tuple), ntuples);
+  lookup_var = (var_t*) calloc(sizeof(var_t), nvar);
+}
+
+void fill_lookup_tables(FILE* fbin, const int d, const unsigned long n_tuples, const int nvar)
+{
+  const size_t bufsize = d*sizeof(var_t) + sizeof(double);
+    int buffer[bufsize];
+    unsigned int n;
+    size_t i_tuple = 0;
+    while (n_tuples > 0) {
+        n = fread(buffer, sizeof(int), bufsize,  fbin);
+        if (!n) break;
+
+        lookup_tuple[i_tuple].avg = *(double*)(buffer+d*sizeof(var_t)); // get the AVG on double TODO: strict alias?
+
+        for(size_t i=0; i < d; ++i)
+        {
+          lookup_tuple[i_tuple].tuples[i] = buffer[i];
+          lookup_var[buffer[i]].avg += lookup_tuple[i_tuple].avg;
+          ++lookup_var[buffer[i]].count;
+        }
+    }
+
+    // normalize avg for each var
+    for(size_t i=0; i < nvar; ++i)
+      lookup_var[i].avg /= lookup_var[i].count;
+}
+
+int compare_tuples (const void * a, const void * b)
+{
+  return ((struct tuple*)a)->avg - ((struct tuple*)b)->avg;
+}
+
+//TODO: this sort moves the tuples[8], might be unefficient
+void sort_tuples_inplace(struct tuple * arr, const unsigned long n_tuples)
+{
+  // std
+  qsort(arr, n_tuples, sizeof(struct tuple), compare_tuples);
 }
 
 // main function 
