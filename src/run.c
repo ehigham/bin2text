@@ -121,7 +121,7 @@ int get_header(FILE* fbin, int *d, int *n_vars, unsigned long *n_tuples, double 
 
 // Thomas: Code for out1/2/3/4 TODO: test it =p
 
-typedef int32_t var_t;
+typedef int var_t;
 struct tuple *lookup_tuple;
 struct var *lookup_var;
 
@@ -136,14 +136,15 @@ void fill_lookup_tables(FILE* fbin, const int d,
                         const unsigned long n_tuples, const int nvar)
 {
   const size_t bufsize = d*sizeof(var_t) + sizeof(double);
-  int buffer[bufsize];
+  var_t buffer[bufsize];
   unsigned int n;
   size_t i_tuple = 0;
   while (n_tuples > 0) {
-    n = fread(buffer, sizeof(int), bufsize,  fbin);
+    n = fread(buffer, sizeof(var_t), bufsize,  fbin);
     if (!n) break;
 
-    lookup_tuple[i_tuple].avg = *(double*)(buffer+d*sizeof(var_t)); // get the AVG on double TODO: strict alias?
+    //lookup_tuple[i_tuple].avg = *(double*)(buffer+d*sizeof(var_t)); // get the AVG on double TODO: strict alias?
+    memcpy(&lookup_tuple[i_tuple].avg,&buffer[d],sizeof(double));
 
     for(size_t i=0; i < d; ++i)
     {
@@ -151,6 +152,7 @@ void fill_lookup_tables(FILE* fbin, const int d,
       lookup_var[buffer[i]].avg += lookup_tuple[i_tuple].avg; // TODO: overflow risk
       ++lookup_var[buffer[i]].count;
     }
+    ++i_tuple;
   }
 
   // normalize avg for each var
@@ -160,7 +162,9 @@ void fill_lookup_tables(FILE* fbin, const int d,
 
 int compare_tuples (const void * a, const void * b)
 {
-  return ((struct tuple*)a)->avg - ((struct tuple*)b)->avg;
+  double xx = ((struct tuple*)a)->avg;
+  double yy = ((struct tuple*)b)->avg;
+  return (xx > yy) - (xx < yy);
 }
 
 //TODO: this sort moves the tuples[8], might be unefficient
@@ -220,8 +224,9 @@ int run(option_t *opt) {
                          n_tuples);
       fill_lookup_tables(fbin2, d,
                          n_tuples, n_vars);
-      sort_tuples_inplace(lookup_tuple, n_vars);
+      sort_tuples_inplace(lookup_tuple, n_tuples);
       rewind(fbin2);
+      printf("%.10f %.10f\n", lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
     }
 
     // if -s is passed, pass through the file once to calculate std, and again to create out5.txt
