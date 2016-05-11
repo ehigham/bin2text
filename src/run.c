@@ -125,7 +125,7 @@ typedef int32_t var_t;
 struct tuple *lookup_tuple;
 struct var *lookup_var;
 
-void init_lookup_tables(FILE * fbin, const int nvar,
+void init_lookup_tables(const int nvar,
                         const unsigned long ntuples)
 {
   lookup_tuple = (struct tuple*) calloc(sizeof(struct tuple), ntuples);
@@ -213,6 +213,16 @@ int run(option_t *opt) {
     fprintf(stderr, "Number of Variables:\t%d\n",n_vars);
     fprintf(stderr, "Number of Tuples:\t%ld\n",n_tuples);
     fprintf(stderr, "Average:\t\t%.10f\n",average);
+
+    if(opt->n !=0 || opt->k != 0)
+    {
+      init_lookup_tables(n_vars,
+                         n_tuples);
+      fill_lookup_tables(fbin2, d,
+                         n_tuples, n_vars);
+      sort_tuples_inplace(lookup_tuple, n_vars);
+      rewind(fbin2);
+    }
 
     // if -s is passed, pass through the file once to calculate std, and again to create out5.txt
     if (opt->s_option) {
