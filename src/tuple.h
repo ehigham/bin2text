@@ -1,4 +1,3 @@
-
 #ifndef TUPLE_HH__
 #define TUPLE_HH__
 

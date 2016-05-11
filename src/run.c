@@ -125,35 +125,37 @@ typedef int32_t var_t;
 struct tuple *lookup_tuple;
 struct var *lookup_var;
 
-void init_lookup_tables(FILE * fbin, const int nvar, const unsigned long ntuples)
+void init_lookup_tables(FILE * fbin, const int nvar,
+                        const unsigned long ntuples)
 {
   lookup_tuple = (struct tuple*) calloc(sizeof(struct tuple), ntuples);
-  lookup_var = (var_t*) calloc(sizeof(var_t), nvar);
+  lookup_var = (struct var*) calloc(sizeof(struct var), nvar);
 }
 
-void fill_lookup_tables(FILE* fbin, const int d, const unsigned long n_tuples, const int nvar)
+void fill_lookup_tables(FILE* fbin, const int d,
+                        const unsigned long n_tuples, const int nvar)
 {
   const size_t bufsize = d*sizeof(var_t) + sizeof(double);
-    int buffer[bufsize];
-    unsigned int n;
-    size_t i_tuple = 0;
-    while (n_tuples > 0) {
-        n = fread(buffer, sizeof(int), bufsize,  fbin);
-        if (!n) break;
+  int buffer[bufsize];
+  unsigned int n;
+  size_t i_tuple = 0;
+  while (n_tuples > 0) {
+    n = fread(buffer, sizeof(int), bufsize,  fbin);
+    if (!n) break;
 
-        lookup_tuple[i_tuple].avg = *(double*)(buffer+d*sizeof(var_t)); // get the AVG on double TODO: strict alias?
+    lookup_tuple[i_tuple].avg = *(double*)(buffer+d*sizeof(var_t)); // get the AVG on double TODO: strict alias?
 
-        for(size_t i=0; i < d; ++i)
-        {
-          lookup_tuple[i_tuple].tuples[i] = buffer[i];
-          lookup_var[buffer[i]].avg += lookup_tuple[i_tuple].avg;
-          ++lookup_var[buffer[i]].count;
-        }
+    for(size_t i=0; i < d; ++i)
+    {
+      lookup_tuple[i_tuple].tuples[i] = buffer[i];
+      lookup_var[buffer[i]].avg += lookup_tuple[i_tuple].avg; // TODO: overflow risk
+      ++lookup_var[buffer[i]].count;
     }
+  }
 
-    // normalize avg for each var
-    for(size_t i=0; i < nvar; ++i)
-      lookup_var[i].avg /= lookup_var[i].count;
+  // normalize avg for each var
+  for(size_t i=0; i < nvar; ++i)
+    lookup_var[i].avg /= lookup_var[i].count;
 }
 
 int compare_tuples (const void * a, const void * b)
