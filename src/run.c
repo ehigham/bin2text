@@ -198,40 +198,42 @@ FILE * create_file_if_not_exists(const char * const filename)
 
 void write_tuple_to_file(FILE * const file,
                          const struct tuple * const tuples,
-                         const size_t i)
+                         const int d,
+                         const size_t tuple_idx)
 {
-  const int32_t * value = tuples[i].tuples;
+  const int32_t * value = tuples[tuple_idx].tuples;
   
   // There are minimum 2 values per tuple 
   fprintf(file, "%d\t%d\t", *value, *(value+1));
   
   // any others
-  value += 2;
-  while(value){
-      fprintf(file, "%d\t", *value++);
-  }
-  fprintf(file, "%lf\n", tuples[i].avg);
+  for (size_t j = 2; j < d; ++j)
+      fprintf(file, "%d\t", *(value + j));
+
+  fprintf(file, "%lf\n", tuples[tuple_idx].avg);
 }
 
 void write_n_tuples_hi(const struct tuple * const tuples,
-                       const int n)
+                       const int n,
+                       const int d)
 {
 
     FILE * file = create_file_if_not_exists(output_files.out1_name);
-    for(size_t i = 0; i < n; ++i)
-        write_tuple_to_file(file, tuples, i);
+    for (size_t i = 0; i < n; ++i)
+        write_tuple_to_file(file, tuples, d, i);
 
     fclose(file);
 }
 
 void write_n_tuples_lo(const struct tuple * const tuples,
                        const int n,
+                       const int d,
                        const uint64_t n_tuples)
 {
 
     FILE * file = create_file_if_not_exists(output_files.out2_name);
-    for(size_t i = n_tuples-1; i > n_tuples - 1 - n; --i)
-        write_tuple_to_file(file, tuples, i);
+    for (size_t i = n_tuples-1; i > n_tuples - 1 - n; --i)
+        write_tuple_to_file(file, tuples, d, i);
 
     fclose(file);
 }
@@ -419,8 +421,8 @@ int run(option_t *opt) {
       printf("%.10f %.10f\n", lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
       
       if (opt->n != 0) {
-        write_n_tuples_hi(lookup_tuple, opt->n);
-        write_n_tuples_lo(lookup_tuple, opt->n, n_tuples);
+        write_n_tuples_hi(lookup_tuple, opt->n, d);
+        write_n_tuples_lo(lookup_tuple, opt->n, d, n_tuples);
       }
 
       if(opt->k != 0)
