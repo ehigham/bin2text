@@ -131,8 +131,6 @@ typedef int var_t;
 struct tuple *lookup_tuple;
 struct var *lookup_var;
 
-extern struct output_filenames output_files;
-
 void init_lookup_tables(const int nvar,
                         const unsigned long ntuples)
 {
