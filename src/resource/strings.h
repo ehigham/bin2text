@@ -23,14 +23,16 @@
 #ifndef BIN2TEXT_RESOURCE_STRINGS_H
 #define BIN2TEXT_RESOURCE_STRINGS_H
 
-static const struct output_filenames
+struct output_filenames
 {
     const char * const out1_name;
     const char * const out2_name;
     const char * const out3_name;
     const char * const out4_name;
     const char * const out5_name; 
-} output_files;
+};
+
+static const struct output_filenames output_files;
 
 #endif // BIN2TEXT_RESOURCE_STRINGS_H
 

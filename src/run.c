@@ -11,6 +11,7 @@
 #include "tuple.h"
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 
 #ifdef DELTA_PREC
 #define PRINT_PRC_D "%.10Lf%c"
@@ -276,10 +277,10 @@ void fprintf_tuple(FILE * out, struct tuple* tuple, const int d)
 
 void output_out3(const int nvar, const int k, const int d)
 {
-  FILE * out3 = fopen("out3.txt", "wx");
+  FILE * out3 = fopen(output_files.out3_name, "wx");
   if (!out3)
   {
-    fprintf(stderr, "out3.txt already exsiting!\n");
+    fprintf(stderr, "%s already exsiting!\n", output_files.out3_name);
     exit(1);
   }
 
@@ -303,10 +304,11 @@ void output_out4(struct tuple * tuples,
                  const double min,
                  const double max)
 {
-  FILE * out4 = fopen("out4.txt", "wx");
+  assert(b != 0);
+  FILE * out4 = fopen(output_files.out4_name, "wx");
   if (!out4)
   {
-    fprintf(stderr, "out4.txt already exsiting!\n");
+    fprintf(stderr, "%s already exsiting!\n", output_files.out4_name);
     exit(1);
   }
   size_t line_num = floor((max-min)/b)+1;
@@ -388,6 +390,9 @@ int run(option_t *opt) {
 
       if(opt->k != 0)
         output_out3(n_vars, opt->k, d);
+
+      if(opt->b != 0)
+        output_out4(lookup_tuple, n_tuples, opt->b, lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
     }
 
     // if -s is passed, pass through the file once to calculate std, and again to create out5.txt
