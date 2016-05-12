@@ -189,23 +189,19 @@ void fill_vars(const unsigned long n_tuples,
 
   for(size_t i=0; i < nvar; ++i)// TODO: too much memory maybe
   {
-    lookup_var[i].tuple_indexes_max = (size_t*) malloc(sizeof(size_t)*k);
-    lookup_var[i].tuple_indexes_min = (size_t*) malloc(sizeof(size_t)*k);
+    lookup_var[i].tuple_indexes_max = (size_t*) calloc(sizeof(size_t), k);
+    lookup_var[i].tuple_indexes_min = (size_t*) calloc(sizeof(size_t), k);
   }
-  size_t i_tuple = 0;
-  while (i_tuple < n_tuples)
-  {
+  for(size_t i_tuple=0; i_tuple < n_tuples; ++i_tuple)// TODO: too much memory maybe
     for(size_t i=0; i < d; ++i)
     {
       var_t var_index = lookup_tuple[i_tuple].tuples[i];
       lookup_var[var_index].avg += lookup_tuple[i_tuple].avg; // TODO: overflow risk
       ++lookup_var[var_index].count;
     }
-    ++i_tuple;
-  }
 
   size_t beg = 0, end = n_tuples-1;
-  while (beg <= end)
+  while (beg <= end) // TODO: heuristic counting the number of variable that need to be done, if 0=> exist
   {
     for(size_t i=0; i < d; ++i)
     {
@@ -243,6 +239,38 @@ void sort_tuples_inplace(struct tuple * arr, const unsigned long n_tuples)
   // std
   qsort(arr, n_tuples, sizeof(struct tuple), compare_tuples);
 }
+
+void fprintf_tuple(FILE * out, struct tuple* tuple, const int d)
+{
+  fprintf(out, "%lf", tuple->avg);
+  for(size_t i=0; i < d; ++i)
+    fprintf(out, "\t%d", tuple->tuples[i]);
+  fprintf(out, "\n");
+}
+
+void output_out3(const int nvar, const int k, const int d)
+{
+  FILE * out3 = fopen("out3.txt", "wx");
+  if (!out3)
+  {
+    fprintf(stderr, "out3.txt already exsiting!\n");
+    exit(1);
+  }
+
+  for(var_t i=0; i < nvar; ++i)
+  {
+    struct var * var = &lookup_var[i];
+    //if(var->count == 0) continue;
+    fprintf(out3, "%d\t%lf\n", i, var->avg);
+    for(size_t tindex = 0; tindex < var->size_tuple_max; ++tindex)
+      fprintf_tuple(out3, &lookup_tuple[var->tuple_indexes_max[tindex]], d);
+
+    for(size_t tindex = 0; tindex < var->size_tuple_min; ++tindex)
+      fprintf_tuple(out3, &lookup_tuple[var->tuple_indexes_min[tindex]], d);
+  }
+  fclose(out3);
+}
+
 
 // main function 
 int run(option_t *opt) {
@@ -294,10 +322,13 @@ int run(option_t *opt) {
                          n_tuples);
       fill_tuples(fbin2, d,
                   n_tuples, n_vars);
-      fill_vars(n_tuples, d, opt->k,n_vars);
       sort_tuples_inplace(lookup_tuple, n_tuples);
+      fill_vars(n_tuples, d, opt->k, n_vars);
       rewind(fbin2);
       printf("%.10f %.10f\n", lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
+
+      if(opt->k != 0)
+        output_out3(n_vars, opt->k, d);
     }
 
     // if -s is passed, pass through the file once to calculate std, and again to create out5.txt
