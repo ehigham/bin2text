@@ -203,7 +203,9 @@ void write_n_tuples_hi(const struct tuple * const tuples,
 {
 
     FILE * file = create_file_if_not_exists(output_files.out1_name);
+    for(size_t i = 0; i < d; ++i){
 
+    }
 }
 
 
@@ -386,6 +388,10 @@ int run(option_t *opt) {
       fill_vars(n_tuples, d, opt->k, n_vars);
       rewind(fbin2);
       printf("%.10f %.10f\n", lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
+      
+      if (opt->n != 0) {
+        write_n_tuples_hi(lookup_tuple, opt->n, d);
+      }
 
       if(opt->k != 0)
         output_out3(n_vars, opt->k, d);
