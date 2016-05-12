@@ -201,7 +201,7 @@ void write_tuple_to_file(FILE * const file,
                          const int d,
                          const size_t tuple_idx)
 {
-  const int32_t * value = tuples[tuple_idx].tuples;
+  const int32_t * const value = tuples[tuple_idx].tuples;
   
   // There are minimum 2 values per tuple 
   fprintf(file, "%d\t%d\t", *value, *(value+1));
