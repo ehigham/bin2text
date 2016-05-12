@@ -1,4 +1,4 @@
-/*    strings.h
+/*    strings.c
  *
  *    defines common strings used by bin2text
  *
@@ -20,17 +20,14 @@
  *    (C) 2016, Thomas Legris, Edmund Higham
 **/
 
-#ifndef BIN2TEXT_RESOURCE_STRINGS_H
-#define BIN2TEXT_RESOURCE_STRINGS_H
+#include "strings.h"
 
-static const struct output_filenames
+static const struct output_filenames output_files =
 {
-    const char * const out1_name;
-    const char * const out2_name;
-    const char * const out3_name;
-    const char * const out4_name;
-    const char * const out5_name; 
-} output_files;
-
-#endif // BIN2TEXT_RESOURCE_STRINGS_H
+    .out1_name = "out1.txt",
+    .out2_name = "out2.txt",
+    .out3_name = "out3.txt",
+    .out4_name = "out4.txt",
+    .out5_name = "out5.txt"
+};
 
