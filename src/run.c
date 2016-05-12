@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include "tuple.h"
 #include <stdlib.h>
+#include <math.h>
 
 #ifdef DELTA_PREC
 #define PRINT_PRC_D "%.10Lf%c"
@@ -269,6 +270,39 @@ void output_out3(const int nvar, const int k, const int d)
       fprintf_tuple(out3, &lookup_tuple[var->tuple_indexes_min[tindex]], d);
   }
   fclose(out3);
+}
+
+void output_out4(struct tuple * tuples,
+                 const unsigned long ntuples,
+                 const double b, 
+                 const double min,
+                 const double max)
+{
+  FILE * out4 = fopen("out4.txt", "wx");
+  if (!out4)
+  {
+    fprintf(stderr, "out4.txt already exsiting!\n");
+    exit(1);
+  }
+  size_t line_num = floor((max-min)/b)+1;
+
+  fprintf(out4, "%lf\t%lf\n", min, max);
+  size_t i_tuples=0;
+  double max_bound = min;
+  for(size_t i=1; i <= line_num; ++i)
+  {
+    max_bound += b;
+    uint32_t counter = 0;
+    // ntuples
+    while(i_tuples < ntuples && lookup_tuple[i_tuples].avg <= max_bound)
+    {
+      ++counter;
+      ++i_tuples;
+    }
+    fprintf(out4, "%d\n", counter);
+    ++i_tuples;
+  }
+  fclose(out4);
 }
 
 
