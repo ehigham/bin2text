@@ -18,6 +18,10 @@
 #define PRINT_PRC_D "%.10lf%c"
 #endif
 
+
+//TODO: Implement this to clear up any malloc'd mem
+//void on_exit(void) {}
+
 // write all tuples above cutoff
 unsigned long count_tuples_bin_cutoff(const option_t* opt, FILE* fbin, int d, double cutoff, long unsigned n_tuples, double average, double std) {
     double next;
@@ -180,6 +184,27 @@ void fill_tuples(FILE * fbin,
     ++i_tuple;
   }
 }
+
+FILE * create_file_if_not_exists(const char * const filename)
+{
+    FILE * file = fopen(filename,"wx");
+    if (file != NULL) return file;
+
+    fprintf(stderr, "Could not create file %s\n", filename);
+    fprintf(stderr, "Please verify it does not already exit.\n");
+    exit(-1);
+}
+
+
+void write_n_tuples_hi(const struct tuple * const tuples,
+                       const int n,
+                       const int d)
+{
+
+    FILE * file = create_file_if_not_exists(output_files.out1_name);
+
+}
+
 
 // Need to be called after tuple sorting
 void fill_vars(const unsigned long n_tuples,

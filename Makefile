@@ -4,6 +4,7 @@ BASEDIR=.
 OBJDIR=$(BASEDIR)/obj
 BIN=$(BASEDIR)
 SRCDIR=src
+RESDIR=$(SRCDIR)/resource
 LIBCINC= -I.
 LIBLINC= -L. 
 LIBLINK= -lm #-lgsl -lgslcblas #-lgmp -lmpfr
@@ -12,14 +13,11 @@ CFLAGS=$(CLFLAGS)  -Wall  $(LIBCINC)
 LFLAGS=$(CLFLAGS)  -Wall  $(LIBLINC)
 
 #############################################################################
-#add non-executables .cpp files to OBJS 
-#if .cpp file reside in a dir other than the current one, add .o rule below
-OBJS=$(OBJDIR)/run.o 
+#add non-executables .c files to OBJS 
+#if .c file reside in a dir other than the current one, add .o rule below
+OBJS=$(OBJDIR)/strings.o \
+	 $(OBJDIR)/run.o 
 
-#add .cpp files (including executables') to CPPFILES.
-CPPFILES= \
-$(SRCDIR)/run.c \
-$(SRCDIR)/main.c
 
 ##############################################################################
 #EXECUTABLES: add executables rules here
@@ -41,8 +39,12 @@ $(OBJDIR)/search.o: $(SRCDIR)/main.c
 ##############################################################################
 # add non-executables .o rules here
 
-$(OBJDIR)/run.o: $(SRCDIR)/run.c $(SRCDIR)/run.h
-	$(GPP) $(CFLAGS) -o $(OBJDIR)/run.o -c $(SRCDIR)/run.c
+$(OBJDIR)/strings.o: $(RESDIR)/strings.c
+	$(GPP) $(CFLAGS) $ -c $ $^ $ $ -o $ $@
+
+
+$(OBJDIR)/run.o: $(SRCDIR)/run.c
+	$(GPP) $(CFLAGS) $ -c $ $^ $ $ -o $ $@
 
 ###############################################################################
 

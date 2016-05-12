@@ -5,6 +5,8 @@
 #ifndef RUN_H 
 #define RUN_H
 
+#include "resource/strings.h"
+
 #define TUP_BUF_SIZE 10000
 
 typedef struct option {
