@@ -11,6 +11,10 @@ struct var
 {
   size_t count;
   double avg;
+  size_t *tuple_indexes_max;
+  size_t size_tuple_max;
+  size_t *tuple_indexes_min;
+  size_t size_tuple_min;
 };
 
 #endif

@@ -132,8 +132,38 @@ void init_lookup_tables(const int nvar,
   lookup_var = (struct var*) calloc(sizeof(struct var), nvar);
 }
 
-void fill_lookup_tables(FILE* fbin, const int d,
-                        const unsigned long n_tuples, const int nvar)
+//void fill_lookup_tables(FILE* fbin, const int d,
+//                        const unsigned long n_tuples, const int nvar)
+//{
+//  const size_t bufsize = d*sizeof(var_t) + sizeof(double);
+//  var_t buffer[bufsize];
+//  unsigned int n;
+//  size_t i_tuple = 0;
+//  while (n_tuples > 0) {
+//    n = fread(buffer, sizeof(var_t), bufsize,  fbin);
+//    if (!n) break;
+//
+//    //lookup_tuple[i_tuple].avg = *(double*)(buffer+d*sizeof(var_t)); // get the AVG on double TODO: strict alias?
+//    memcpy(&lookup_tuple[i_tuple].avg,&buffer[d],sizeof(double));
+//
+//    for(size_t i=0; i < d; ++i)
+//    {
+//      lookup_tuple[i_tuple].tuples[i] = buffer[i];
+//      lookup_var[buffer[i]].avg += lookup_tuple[i_tuple].avg; // TODO: overflow risk
+//      ++lookup_var[buffer[i]].count;
+//    }
+//    ++i_tuple;
+//  }
+//
+//  // normalize avg for each var
+//  for(size_t i=0; i < nvar; ++i)
+//    lookup_var[i].avg /= lookup_var[i].count;
+//}
+
+void fill_tuples(FILE * fbin,
+                 const int d,
+                 const unsigned long n_tuples,
+                 const int nvar)
 {
   const size_t bufsize = d*sizeof(var_t) + sizeof(double);
   var_t buffer[bufsize];
@@ -142,22 +172,62 @@ void fill_lookup_tables(FILE* fbin, const int d,
   while (n_tuples > 0) {
     n = fread(buffer, sizeof(var_t), bufsize,  fbin);
     if (!n) break;
-
-    //lookup_tuple[i_tuple].avg = *(double*)(buffer+d*sizeof(var_t)); // get the AVG on double TODO: strict alias?
     memcpy(&lookup_tuple[i_tuple].avg,&buffer[d],sizeof(double));
 
     for(size_t i=0; i < d; ++i)
-    {
       lookup_tuple[i_tuple].tuples[i] = buffer[i];
-      lookup_var[buffer[i]].avg += lookup_tuple[i_tuple].avg; // TODO: overflow risk
-      ++lookup_var[buffer[i]].count;
+    ++i_tuple;
+  }
+}
+
+// Need to be called after tuple sorting
+void fill_vars(const unsigned long n_tuples,
+               const int d,
+               const int k,
+               const int nvar)
+{
+
+  for(size_t i=0; i < nvar; ++i)// TODO: too much memory maybe
+  {
+    lookup_var[i].tuple_indexes_max = (size_t*) malloc(sizeof(size_t)*k);
+    lookup_var[i].tuple_indexes_min = (size_t*) malloc(sizeof(size_t)*k);
+  }
+  size_t i_tuple = 0;
+  while (i_tuple < n_tuples)
+  {
+    for(size_t i=0; i < d; ++i)
+    {
+      var_t var_index = lookup_tuple[i_tuple].tuples[i];
+      lookup_var[var_index].avg += lookup_tuple[i_tuple].avg; // TODO: overflow risk
+      ++lookup_var[var_index].count;
     }
     ++i_tuple;
+  }
+
+  size_t beg = 0, end = n_tuples-1;
+  while (beg <= end)
+  {
+    for(size_t i=0; i < d; ++i)
+    {
+      var_t var_index = lookup_tuple[beg].tuples[i];
+      if(lookup_var[var_index].size_tuple_min < k)
+        lookup_var[var_index].tuple_indexes_min[lookup_var[var_index].size_tuple_min++] = beg;
+    }
+
+    for(size_t i=0; i < d; ++i)
+    {
+      var_t var_index = lookup_tuple[end].tuples[i];
+      if(lookup_var[var_index].size_tuple_max < k)
+        lookup_var[var_index].tuple_indexes_max[lookup_var[var_index].size_tuple_max++] = end;
+    }
+    ++beg;
+    --end;
   }
 
   // normalize avg for each var
   for(size_t i=0; i < nvar; ++i)
     lookup_var[i].avg /= lookup_var[i].count;
+
 }
 
 int compare_tuples (const void * a, const void * b)
@@ -222,8 +292,9 @@ int run(option_t *opt) {
     {
       init_lookup_tables(n_vars,
                          n_tuples);
-      fill_lookup_tables(fbin2, d,
-                         n_tuples, n_vars);
+      fill_tuples(fbin2, d,
+                  n_tuples, n_vars);
+      fill_vars(n_tuples, d, opt->k,n_vars);
       sort_tuples_inplace(lookup_tuple, n_tuples);
       rewind(fbin2);
       printf("%.10f %.10f\n", lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
