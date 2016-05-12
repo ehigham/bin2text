@@ -32,7 +32,7 @@ struct output_filenames
     const char * const out5_name; 
 };
 
-static const struct output_filenames output_files;
+extern const struct output_filenames output_files;
 
 #endif // BIN2TEXT_RESOURCE_STRINGS_H
 

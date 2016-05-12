@@ -22,7 +22,7 @@
 
 #include "strings.h"
 
-static const struct output_filenames output_files =
+const struct output_filenames output_files =
 {
     .out1_name = "out1.txt",
     .out2_name = "out2.txt",

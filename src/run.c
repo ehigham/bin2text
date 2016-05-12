@@ -277,7 +277,7 @@ void fprintf_tuple(FILE * out, struct tuple* tuple, const int d)
 
 void output_out3(const int nvar, const int k, const int d)
 {
-  FILE * out3 = fopen(output_files.out3_name, "wx");
+  FILE * out3 = fopen("out3.txt", "wx");
   if (!out3)
   {
     fprintf(stderr, "%s already exsiting!\n", output_files.out3_name);
@@ -316,7 +316,7 @@ void output_out4(struct tuple * tuples,
   fprintf(out4, "%lf\t%lf\n", min, max);
   size_t i_tuples=0;
   double max_bound = min;
-  for(size_t i=1; i <= line_num; ++i)
+  for(size_t i=0; i < line_num; ++i)
   {
     max_bound += b;
     uint32_t counter = 0;
@@ -327,7 +327,6 @@ void output_out4(struct tuple * tuples,
       ++i_tuples;
     }
     fprintf(out4, "%d\n", counter);
-    ++i_tuples;
   }
   fclose(out4);
 }
