@@ -19,7 +19,8 @@ typedef struct option {
 
 int get_header(FILE* fbin,  int *d, int *n_vars, unsigned long *n_tuples, double *average);
 int run(option_t *opt);
-double calculate_std_bin(FILE* fbin, double average, int d, unsigned long n_tuples);
+//double calculate_std_bin(FILE* fbin, double average, int d, unsigned long n_tuples);
+double calculate_std_bin(double average, int d, unsigned long n_tuples);
 
 #endif
 

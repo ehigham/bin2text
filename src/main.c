@@ -100,11 +100,10 @@ int main(int argc, char * argv[]) {
     return 1;
   }
 
-  //TODO: remove this, implement these options
   if ((opt.n != 0) || (opt.k != 0) || (opt.b != 0)) {
-    fprintf(stderr, "WARNING: -n, -k, -b not yet implemented!\n");
-    //return 1;
+    //TODO: add check?
   }
+
   ltime = time(NULL); 
   fprintf(stderr, "%s",asctime(localtime(&ltime)));
 
