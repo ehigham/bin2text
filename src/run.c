@@ -207,7 +207,7 @@ void write_tuple_to_file(FILE * const file,
   for (size_t j = 2; j < d; ++j)
     fprintf(file, "%d\t", *(value + j));
 
-  fprintf(file, "%lf\n", tuples[tuple_idx].avg);
+  fprintf(file, "%.10lf\n", tuples[tuple_idx].avg);
 }
 
 void write_n_tuples_hi(const struct tuple * const tuples,
@@ -248,7 +248,7 @@ void output_out3(const int nvar, const int k, const int d)
   {
     struct var * var = &lookup_var[i];
     //if(var->count == 0) continue;
-    fprintf(out3, "%d\t%lf\n", i, var->avg);
+    fprintf(out3, "%d\t%.10lf\n", i, var->avg);
     for(size_t tindex = 0; tindex < var->size_tuple_max; ++tindex)
       fprintf_tuple(out3, &lookup_tuple[var->tuple_indexes_max[tindex]], d);
 
@@ -272,7 +272,7 @@ void output_out4(const unsigned long ntuples,
   }
   size_t line_num = floor((max-min)/b)+1;
 
-  fprintf(out4, "%lf\t%lf\n", min, max);
+  fprintf(out4, "%.10lf\t%.10lf\n", min, max);
   size_t i_tuples=0;
   double max_bound = min;
   for(size_t i=0; i < line_num; ++i)
@@ -336,17 +336,19 @@ int run(option_t *opt)
   fprintf(stderr, "Number of Tuples:\t%ld\n",n_tuples);
   fprintf(stderr, "Average:\t\t%.10f\n",average);
 
-  if(opt->n !=0 || opt->k != 0)
+  if(opt->n !=0 || opt->k != 0 || opt->s_option)
   {
     init_lookup_tuple(n_tuples);
-    init_lookup_var(n_vars);
 
     fill_tuples(fbin2, d,
-                n_tuples, n_vars);
+                n_tuples);
+
+    if (fclose(fbin2) != 0) {
+      fprintf(stderr, "Error closing binary file 2.\n");
+      return -1;
+    }
+
     sort_tuples_inplace(lookup_tuple, n_tuples);
-    fill_vars(n_tuples, d, opt->k, n_vars);
-    rewind(fbin2);
-    printf("%.10f %.10f\n", lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
 
     if (opt->n != 0) {
       write_n_tuples_hi(lookup_tuple, opt->n, d);
@@ -354,29 +356,35 @@ int run(option_t *opt)
     }
 
     if(opt->k != 0)
+    {
+      init_lookup_var(n_vars);
+      fill_vars(n_tuples, d, opt->k, n_vars);
       output_out3(n_vars, opt->k, d);
+      delete_lookup_var();
+    }
 
     if(opt->b != 0)
       output_out4(n_tuples, opt->b, lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
+
+    // if -s is passed, pass through the file once to calculate std, and again to create out5.txt
+    if (opt->s_option) {
+      std = calculate_std_bin(average, d, n_tuples+1);
+      cutoff = average + sign*std*opt->s_std;
+      fprintf(stderr, "St. Dev.:\t\t%.10f\n",std);
+      fprintf(stderr, "Cutoff:\t\t\t%.10f\n",cutoff);
+
+      // count and print tuples above cutoff
+      c = count_tuples_bin_cutoff(opt, d, cutoff, n_tuples+1, average, std);
+      fprintf(stderr, "Tuples Above Cutoff:\t%ld\t(%.2f%%)\n", c, 100.0*c/n_tuples);
+    }
+
+    delete_lookup_tuple();
   }
-
-  // if -s is passed, pass through the file once to calculate std, and again to create out5.txt
-  if (opt->s_option) {
-    std = calculate_std_bin(average, d, n_tuples+1);
-    rewind(fbin2);
-    cutoff = average + sign*std*opt->s_std;
-    fprintf(stderr, "St. Dev.:\t\t%.10f\n",std);
-    fprintf(stderr, "Cutoff:\t\t\t%.10f\n",cutoff);
-
-    // count and print tuples above cutoff
-    c = count_tuples_bin_cutoff(opt, d, cutoff, n_tuples+1, average, std);
-    fprintf(stderr, "Tuples Above Cutoff:\t%ld\t(%.2f%%)\n", c, 100.0*c/n_tuples);
-  }
-
-  if (fclose(fbin2) != 0) {
+  else if (fclose(fbin2) != 0) {
     fprintf(stderr, "Error closing binary file 2.\n");
     return -1;
   }
+
   return 0;
 }
 

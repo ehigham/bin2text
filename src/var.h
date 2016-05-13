@@ -30,4 +30,6 @@ void fill_vars(const unsigned long n_tuples,
                const int k,
                const int nvar);
 
+void delete_lookup_var();
+
 #endif

@@ -22,8 +22,7 @@ void init_lookup_tuple(const unsigned long ntuples);
 
 void fill_tuples(FILE * fbin,
                  const int d,
-                 const unsigned long n_tuples,
-                 const int nvar);
+                 const unsigned long n_tuples);
 
 void fprintf_tuple(FILE * out,
                    struct tuple* tuple,
@@ -31,6 +30,8 @@ void fprintf_tuple(FILE * out,
 
 void sort_tuples_inplace(struct tuple * arr,
                          const unsigned long n_tuples);
+
+void delete_lookup_tuple();
 
 #endif
 

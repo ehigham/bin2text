@@ -2,9 +2,16 @@
 
 struct tuple *lookup_tuple;
 
+// ============================================================================
 void init_lookup_tuple(const unsigned long ntuples)
 {
   lookup_tuple = (struct tuple*) calloc(sizeof(struct tuple), ntuples);
+}
+
+// ============================================================================
+void delete_lookup_tuple()
+{
+  free(lookup_tuple);
 }
 
 // ============================================================================
@@ -33,8 +40,7 @@ union double_var_t
 // ============================================================================
 void fill_tuples(FILE * fbin,
                  const int d,
-                 const unsigned long n_tuples,
-                 const int nvar)
+                 const unsigned long n_tuples)
 {
   const size_t tuplesize = d + (sizeof(double)/sizeof(var_t));
   const size_t bufsize = BUF_SIZE * tuplesize;
@@ -45,6 +51,7 @@ void fill_tuples(FILE * fbin,
   while ((n = fread(buffer, sizeof(var_t), bufsize,  fbin)))
     while(n)
     {
+      n -= tuplesize;
       for(size_t i=0; i < d; ++i)
         lookup_tuple[i_tuple].tuples[i] = buffer[n+i];
 
@@ -54,7 +61,6 @@ void fill_tuples(FILE * fbin,
       lookup_tuple[i_tuple].avg = avg.d;
 
       ++i_tuple;
-      n -= tuplesize;
     }
 }
 

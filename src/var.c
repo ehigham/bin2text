@@ -9,6 +9,12 @@ void init_lookup_var(const int nvar)
 }
 
 // ============================================================================
+void delete_lookup_var()
+{
+  free(lookup_var);
+}
+
+// ============================================================================
 void fill_vars(const unsigned long n_tuples,
                const int d,
                const int k,
