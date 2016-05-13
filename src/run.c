@@ -127,7 +127,13 @@ int get_header(FILE* fbin, int *d, int *n_vars, unsigned long *n_tuples, double 
   return 0;
 }
 
-unsigned long count_tuples_bin_cutoff(const option_t* opt, int d, double cutoff, long unsigned n_tuples, double average, double std) 
+unsigned long count_tuples_bin_cutoff(const option_t* opt,
+                                      int d,
+                                      double cutoff,
+                                      long unsigned n_tuples,
+                                      double average,
+                                      double std,
+                                      bool lookup_tuple_sorted) 
 {
   double next;
   unsigned long c = 0;
@@ -137,49 +143,97 @@ unsigned long count_tuples_bin_cutoff(const option_t* opt, int d, double cutoff,
     fprintf(stderr, "Error: couldn't open %s\n", output_files.out5_name);
     return -1;
   }
-  for(size_t i_tuple=0; i_tuple < n_tuples; ++i_tuple)
+  if(lookup_tuple_sorted)
   {
-    next = lookup_tuple[i_tuple].avg;
-    // if next score is in the tail
-    if ((!(d%2) && (next >= cutoff)) || ((d%2) && (next <= cutoff))) 
+    if(d%2)
     {
-      //TODO: inefficient, need different types for different d
-      for (int i = 0; i < d; i++)
-        fprintf(fout5,"%d\t",lookup_tuple[i_tuple].tuples[i]);
-      fprintf(fout5, PRINT_PRC_D,next,'\t');
-      fprintf(fout5, PRINT_PRC_D,fabs(next-average)/std, '\n');
-      c++;
+      size_t i_tuple = 0;
+      while(i_tuple < n_tuples && ((next = lookup_tuple[i_tuple].avg) <= cutoff))
+      {
+        for (int i = 0; i < d; i++)
+          fprintf(fout5,"%d\t",lookup_tuple[i_tuple].tuples[i]);
+        fprintf(fout5, PRINT_PRC_D,next,'\t');
+        fprintf(fout5, PRINT_PRC_D,fabs(next-average)/std, '\n');
+        c++;
+        ++i_tuple;
+      }
+    }
+    else 
+    {
+      size_t i_tuple = n_tuples - 1;
+      while(i_tuple < n_tuples  // unsigned, will never be lower than 0
+            && ((next = lookup_tuple[i_tuple].avg) >= cutoff))
+      {
+        for (int i = 0; i < d; i++)
+          fprintf(fout5,"%d\t",lookup_tuple[i_tuple].tuples[i]);
+        fprintf(fout5, PRINT_PRC_D,next,'\t');
+        fprintf(fout5, PRINT_PRC_D,fabs(next-average)/std, '\n');
+        c++;
+        --i_tuple;
+      }
     }
   }
+  else
+    for(size_t i_tuple=0; i_tuple < n_tuples; ++i_tuple)
+    {
+      next = lookup_tuple[i_tuple].avg;
+      // if next score is in the tail
+      if ((!(d%2) && (next >= cutoff)) || ((d%2) && (next <= cutoff))) 
+      {
+        //TODO: inefficient, need different types for different d
+        for (int i = 0; i < d; i++)
+          fprintf(fout5,"%d\t",lookup_tuple[i_tuple].tuples[i]);
+
+        fprintf(fout5, PRINT_PRC_D,next,'\t');
+        fprintf(fout5, PRINT_PRC_D,fabs(next-average)/std, '\n');
+        c++;
+      }
+    }
   fclose(fout5);
   return c;
 }
 
 // calculate standard deviation, min and max delta
-double calculate_std_bin(double average, int d, unsigned long n_tuples) 
+double calculate_std_bin(double average,
+                         int d,
+                         const unsigned long n_tuples,
+                         bool lookup_tuple_sorted) 
 {
   double next;
-  unsigned long c = 0;
   double sum = 0.0;
   double result;
   double min = DBL_MAX;
   double max = -DBL_MAX;
   // TODO: hard code types for different values of d
-  for(size_t i_tuple=0; i_tuple< n_tuples; ++i_tuple)
+  if(lookup_tuple_sorted)
   {
-    next = lookup_tuple[i_tuple].avg;
-    if (next < min)
-      min = next;
-    if (next > max)
-      max = next;
-    sum += pow(next-average, 2);
-    c++;
+    for(size_t i_tuple=0; i_tuple < n_tuples; ++i_tuple)
+    {
+      next = lookup_tuple[i_tuple].avg;
+      if (next < min)
+        min = next;
+      if (next > max)
+        max = next;
+      sum += pow(next-average, 2);
+      //c++;
+    }
+  }
+  else
+  {
+    for(size_t i_tuple=0; i_tuple < n_tuples; ++i_tuple)
+    {
+      next = lookup_tuple[i_tuple].avg;
+      sum += pow(next-average, 2);
+    }
+    min = lookup_tuple[0].avg;
+    max = lookup_tuple[n_tuples-1].avg;
   }
   fprintf(stderr, "Min Delta:\t\t");
   fprintf(stderr, PRINT_PRC_D,min, '\n');
   fprintf(stderr, "Max Delta:\t\t");
   fprintf(stderr, PRINT_PRC_D,max, '\n');
-  result = sum/c;
+
+  result = sum/n_tuples;
   return sqrtl(result);
 }
 
@@ -347,8 +401,12 @@ int run(option_t *opt)
       fprintf(stderr, "Error closing binary file 2.\n");
       return -1;
     }
-
-    sort_tuples_inplace(lookup_tuple, n_tuples);
+    bool sorted_tuple = false;
+    if(opt->k != 0 || opt->n != 0)
+    {
+      sort_tuples_inplace(lookup_tuple, n_tuples);
+      sorted_tuple = true;
+    }
 
     if (opt->n != 0) {
       write_n_tuples_hi(lookup_tuple, opt->n, d);
@@ -360,21 +418,22 @@ int run(option_t *opt)
       init_lookup_var(n_vars);
       fill_vars(n_tuples, d, opt->k, n_vars);
       output_out3(n_vars, opt->k, d);
-      delete_lookup_var();
+      delete_lookup_var(n_vars);
     }
 
     if(opt->b != 0)
       output_out4(n_tuples, opt->b, lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
 
     // if -s is passed, pass through the file once to calculate std, and again to create out5.txt
-    if (opt->s_option) {
-      std = calculate_std_bin(average, d, n_tuples+1);
+    if (opt->s_option) 
+    {
+      std = calculate_std_bin(average, d, n_tuples+1, sorted_tuple);
       cutoff = average + sign*std*opt->s_std;
       fprintf(stderr, "St. Dev.:\t\t%.10f\n",std);
       fprintf(stderr, "Cutoff:\t\t\t%.10f\n",cutoff);
 
       // count and print tuples above cutoff
-      c = count_tuples_bin_cutoff(opt, d, cutoff, n_tuples+1, average, std);
+      c = count_tuples_bin_cutoff(opt, d, cutoff, n_tuples+1, average, std, sorted_tuple);
       fprintf(stderr, "Tuples Above Cutoff:\t%ld\t(%.2f%%)\n", c, 100.0*c/n_tuples);
     }
 

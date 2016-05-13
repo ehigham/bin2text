@@ -7,14 +7,14 @@
 #include <float.h>
 #include <string.h>
 
+typedef int32_t var_t;
+
 //__attribute__((packed)) //TODO: to be considered
 struct tuple
 {
-  int32_t tuples[8];
+  var_t tuples[8];
   double avg;
 };
-
-typedef int32_t var_t;
 
 extern struct tuple *lookup_tuple;
 

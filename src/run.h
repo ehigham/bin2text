@@ -7,6 +7,8 @@
 
 #include "resource/strings.h"
 
+#include <stdbool.h>
+
 #define TUP_BUF_SIZE 10000
 
 typedef struct option {
@@ -17,10 +19,17 @@ typedef struct option {
     char in_file2[50];
 } option_t;
 
-int get_header(FILE* fbin,  int *d, int *n_vars, unsigned long *n_tuples, double *average);
+int get_header(FILE* fbin,
+               int *d,
+               int *n_vars,
+               unsigned long *n_tuples,
+               double *average);
 int run(option_t *opt);
 //double calculate_std_bin(FILE* fbin, double average, int d, unsigned long n_tuples);
-double calculate_std_bin(double average, int d, unsigned long n_tuples);
+double calculate_std_bin(double average,
+                         int d,
+                         unsigned long n_tuples,
+                         bool sorted_tuple);
 
 #endif
 

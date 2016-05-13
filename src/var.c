@@ -9,8 +9,14 @@ void init_lookup_var(const int nvar)
 }
 
 // ============================================================================
-void delete_lookup_var()
+void delete_lookup_var(const int nvar)
 {
+
+  for(size_t i=0; i < nvar; ++i)
+  {
+    free(lookup_var[i].tuple_indexes_max);
+    free(lookup_var[i].tuple_indexes_min);
+  }
   free(lookup_var);
 }
 
