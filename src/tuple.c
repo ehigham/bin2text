@@ -23,25 +23,39 @@ void sort_tuples_inplace(struct tuple * arr, const unsigned long n_tuples)
   qsort(arr, n_tuples, sizeof(struct tuple), compare_tuples);
 }
 
+union double_var_t
+{
+  var_t v[2];
+  double d;
+};
+
+#define BUF_SIZE 512
 // ============================================================================
 void fill_tuples(FILE * fbin,
                  const int d,
                  const unsigned long n_tuples,
                  const int nvar)
 {
-  const size_t bufsize = d*sizeof(var_t) + sizeof(double);
-  var_t buffer[bufsize];
-  unsigned int n;
-  size_t i_tuple = 0;
-  while (n_tuples > 0) {
-    n = fread(buffer, sizeof(var_t), bufsize,  fbin);
-    if (!n) break;
-    memcpy(&lookup_tuple[i_tuple].avg,&buffer[d],sizeof(double));
+  const size_t tuplesize = d + (sizeof(double)/sizeof(var_t));
+  const size_t bufsize = BUF_SIZE * tuplesize;
 
-    for(size_t i=0; i < d; ++i)
-      lookup_tuple[i_tuple].tuples[i] = buffer[i];
-    ++i_tuple;
-  }
+  var_t buffer[bufsize];
+  size_t n;
+  size_t i_tuple = 0;
+  while ((n = fread(buffer, sizeof(var_t), bufsize,  fbin)))
+    while(n)
+    {
+      for(size_t i=0; i < d; ++i)
+        lookup_tuple[i_tuple].tuples[i] = buffer[n+i];
+
+      union double_var_t avg;
+      avg.v[0] = buffer[n+d];
+      avg.v[1] = buffer[n+d+1];
+      lookup_tuple[i_tuple].avg = avg.d;
+
+      ++i_tuple;
+      n -= tuplesize;
+    }
 }
 
 // ============================================================================

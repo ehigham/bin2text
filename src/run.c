@@ -127,9 +127,6 @@ int get_header(FILE* fbin, int *d, int *n_vars, unsigned long *n_tuples, double 
   return 0;
 }
 
-typedef int var_t;
-
-
 unsigned long count_tuples_bin_cutoff(const option_t* opt, int d, double cutoff, long unsigned n_tuples, double average, double std) 
 {
   double next;
@@ -261,8 +258,7 @@ void output_out3(const int nvar, const int k, const int d)
   fclose(out3);
 }
 
-void output_out4(struct tuple * tuples,
-                 const unsigned long ntuples,
+void output_out4(const unsigned long ntuples,
                  const double b, 
                  const double min,
                  const double max)
@@ -361,7 +357,7 @@ int run(option_t *opt)
       output_out3(n_vars, opt->k, d);
 
     if(opt->b != 0)
-      output_out4(lookup_tuple, n_tuples, opt->b, lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
+      output_out4(n_tuples, opt->b, lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
   }
 
   // if -s is passed, pass through the file once to calculate std, and again to create out5.txt

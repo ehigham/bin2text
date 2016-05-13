@@ -7,6 +7,7 @@
 #include <float.h>
 #include <string.h>
 
+//__attribute__((packed)) //TODO: to be considered
 struct tuple
 {
   int32_t tuples[8];
