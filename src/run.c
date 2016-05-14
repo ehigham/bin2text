@@ -56,8 +56,8 @@ int get_header(FILE* fbin,
   return 0;
 }
 
-void check_binary_files(FILE* fbin1,
-                        FILE* fbin2,
+void check_binary_files(FILE** fbin1,
+                        FILE** fbin2,
                         const option_t *opt,
                         unsigned int *d,
                         unsigned int *n_vars,
@@ -65,14 +65,14 @@ void check_binary_files(FILE* fbin1,
                         double *average)
 {
   // open output file, get dimension and other information from header
-  fbin1 = open_file_exit_if_error(opt->in_file1);
-  fbin2 = open_file_exit_if_error(opt->in_file2);
+  *fbin1 = open_file_exit_if_error(opt->in_file1);
+  *fbin2 = open_file_exit_if_error(opt->in_file2);
 
-  exit_if_empty_file(fbin1, "Error: empty binary file 1  \n");
-  exit_if_empty_file(fbin2, "Error: empty binary file 2  \n");
+  exit_if_empty_file(*fbin1, "Error: empty binary file 1  \n");
+  exit_if_empty_file(*fbin2, "Error: empty binary file 2  \n");
 
-  get_header(fbin1, d, n_vars, n_tuples, average);
-  close_file_exit_if_error(fbin1, "Error closing binary file 1.\n");
+  get_header(*fbin1, d, n_vars, n_tuples, average);
+  close_file_exit_if_error(*fbin1, "Error closing binary file 1.\n");
 }
 
 // main function 
@@ -87,7 +87,7 @@ int run(option_t *opt)
   double sign=1;
   unsigned long n_tuples, c;
 
-  check_binary_files(fbin1, fbin2, opt, &d, &n_vars, &n_tuples, &average);
+  check_binary_files(&fbin1, &fbin2, opt, &d, &n_vars, &n_tuples, &average);
   const struct output_files output_files = open_and_check_output_files(opt);
 
   sign = pow(-1,d);
@@ -114,7 +114,9 @@ int run(option_t *opt)
 
     if (opt->n > 0) {
       write_n_tuples_hi(output_files.out1, lookup_tuple, opt->n, d, n_tuples);
+      close_file_exit_if_error(output_files.out1, "Error: closing out1.txt failed");
       write_n_tuples_lo(output_files.out2,lookup_tuple, opt->n, d, n_tuples);
+      close_file_exit_if_error(output_files.out2, "Error: closing out2.txt failed");
     }
 
     if(opt->k != 0)
@@ -122,11 +124,15 @@ int run(option_t *opt)
       init_lookup_var(n_vars, opt->k);
       fill_vars(n_tuples, d, opt->k, n_vars);
       write_var_avg_and_participation(output_files.out3,n_vars, d);
+      close_file_exit_if_error(output_files.out3, "Error: closing out3.txt failed");
       delete_lookup_var();
     }
 
     if(opt->b != 0)
+    {
       write_scoring_histogram(output_files.out4,n_tuples, opt->b, lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
+      close_file_exit_if_error(output_files.out4, "Error: closing out4.txt failed");
+    }
 
     // if -s is passed, pass through the file once to calculate std, and again to create out5.txt
     if (opt->s_option) 
@@ -139,6 +145,7 @@ int run(option_t *opt)
       // count and print tuples above cutoff
       c = count_tuples_bin_cutoff(output_files.out5,d, cutoff, n_tuples+1, average, std, sorted_tuple);
       fprintf(stderr, "Tuples Above Cutoff:\t%ld\t(%.2f%%)\n", c, 100.0*c/n_tuples);
+      close_file_exit_if_error(output_files.out5, "Error: closing out5.txt failed");
     }
 
     delete_lookup_tuple();

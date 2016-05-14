@@ -147,7 +147,6 @@ unsigned long count_tuples_bin_cutoff(FILE* fout5,
         c++;
       }
     }
-  fclose(fout5);
   return c;
 }
 #undef DELTA_PREC
@@ -196,7 +195,7 @@ double calculate_std_bin(double average,
   return sqrtl(result);
 }
 
-void write_n_tuples_hi(FILE * file,
+void write_n_tuples_lo(FILE * file,
                        const struct tuple * const __restrict tuples,
                        int n,
                        const int d,
@@ -207,15 +206,16 @@ void write_n_tuples_hi(FILE * file,
       write_tuple_to_file(file, &tuples[i], d);
 }
 
-void write_n_tuples_lo(FILE*file,
+void write_n_tuples_hi(FILE*file,
                        const struct tuple * const __restrict tuples,
                        int n,
                        const int d,
                        const uint64_t n_tuples)
 {
-  if ((uint64_t)n > n_tuples) n = (int)n_tuples; 
-  while (n > 0)
-      write_tuple_to_file(file, &tuples[--n], d);
+  assert(n_tuples > 0);
+  if ((uint64_t)n > n_tuples) n = (int)n_tuples;
+  for (int i = n_tuples-1; i >= (n_tuples - n); --i)
+      write_tuple_to_file(file, &tuples[i], d);
 }
 
 void write_scoring_histogram(FILE*out4,

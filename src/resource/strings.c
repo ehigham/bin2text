@@ -21,6 +21,7 @@
 **/
 
 #include "strings.h"
+#include <sys/stat.h>
 
 const struct output_filenames output_filenames =
 {
@@ -34,19 +35,32 @@ const struct output_filenames output_filenames =
 struct output_files open_and_check_output_files(const option_t * opt)
 {
   FILE *f1=NULL, *f2=NULL, *f3=NULL, *f4=NULL, *f5=NULL;
+
+  struct stat stats;
   if(opt->n > 0)
   {
     f1 = create_file_if_not_exists(output_filenames.out1_name);
+    setvbuf(f1, NULL, _IOFBF, stats.st_blksize);
     f2 = create_file_if_not_exists(output_filenames.out2_name);
+    setvbuf(f2, NULL, _IOFBF, stats.st_blksize);
   }
   if(opt->k > 0)
+  {
     f3 = create_file_if_not_exists(output_filenames.out3_name);
+    setvbuf(f3, NULL, _IOFBF, stats.st_blksize);
+  }
 
   if(opt->b != 0)
+  {
     f4 = create_file_if_not_exists(output_filenames.out4_name);
+    setvbuf(f4, NULL, _IOFBF, stats.st_blksize);
+  }
 
   if(opt->s_option)
+  {
     f5 = create_file_if_not_exists(output_filenames.out5_name);
+    setvbuf(f5, NULL, _IOFBF, stats.st_blksize);
+  }
 
   struct output_files res = {f1,f2,f3,f4,f5};
   return res;
