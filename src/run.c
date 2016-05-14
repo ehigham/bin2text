@@ -97,8 +97,12 @@
 //}
 
 // read and store header information
-int get_header(FILE* fbin, int *d, int *n_vars, unsigned long *n_tuples, double *average) {
-  int err;
+int get_header(FILE* fbin,
+               unsigned int *d,
+               unsigned int *n_vars,
+               unsigned long *n_tuples,
+               double *average) {
+  size_t err;
   err = fread(d, 1, sizeof(int), fbin);
   if (!err) {
     fprintf(stderr, "Error: couldn't read dummy 0 from file\n");
@@ -127,8 +131,7 @@ int get_header(FILE* fbin, int *d, int *n_vars, unsigned long *n_tuples, double 
   return 0;
 }
 
-unsigned long count_tuples_bin_cutoff(const option_t* opt,
-                                      int d,
+unsigned long count_tuples_bin_cutoff(size_t d,
                                       double cutoff,
                                       long unsigned n_tuples,
                                       double average,
@@ -141,7 +144,7 @@ unsigned long count_tuples_bin_cutoff(const option_t* opt,
   if (!fout5) 
   {
     fprintf(stderr, "Error: couldn't open %s\n", output_files.out5_name);
-    return -1;
+    return 1;
   }
   if(lookup_tuple_sorted)
   {
@@ -150,7 +153,7 @@ unsigned long count_tuples_bin_cutoff(const option_t* opt,
       size_t i_tuple = 0;
       while(i_tuple < n_tuples && ((next = lookup_tuple[i_tuple].avg) <= cutoff))
       {
-        for (int i = 0; i < d; i++)
+        for (size_t i = 0; i < d; i++)
           fprintf(fout5,"%d\t",lookup_tuple[i_tuple].tuples[i]);
         fprintf(fout5, PRINT_PRC_D,next,'\t');
         fprintf(fout5, PRINT_PRC_D,fabs(next-average)/std, '\n');
@@ -164,7 +167,7 @@ unsigned long count_tuples_bin_cutoff(const option_t* opt,
       while(i_tuple < n_tuples  // unsigned, will never be lower than 0
             && ((next = lookup_tuple[i_tuple].avg) >= cutoff))
       {
-        for (int i = 0; i < d; i++)
+        for (size_t i = 0; i < d; i++)
           fprintf(fout5,"%d\t",lookup_tuple[i_tuple].tuples[i]);
         fprintf(fout5, PRINT_PRC_D,next,'\t');
         fprintf(fout5, PRINT_PRC_D,fabs(next-average)/std, '\n');
@@ -181,7 +184,7 @@ unsigned long count_tuples_bin_cutoff(const option_t* opt,
       if ((!(d%2) && (next >= cutoff)) || ((d%2) && (next <= cutoff))) 
       {
         //TODO: inefficient, need different types for different d
-        for (int i = 0; i < d; i++)
+        for (size_t i = 0; i < d; i++)
           fprintf(fout5,"%d\t",lookup_tuple[i_tuple].tuples[i]);
 
         fprintf(fout5, PRINT_PRC_D,next,'\t');
@@ -274,11 +277,11 @@ void write_n_tuples_lo(const struct tuple * const __restrict tuples,
   fclose(file);
 }
 
-void output_out3(const int nvar, const int k, const int d)
+void output_out3(const size_t nvar, const size_t d)
 {
   FILE * out3 = create_file_if_not_exists(output_files.out3_name);
 
-  for(var_t i=0; i < nvar; ++i)
+  for(var_t i=0; i < (var_t)nvar; ++i)
   {
     struct var * var = &lookup_var[i];
     //if(var->count == 0) continue;
@@ -300,7 +303,8 @@ void output_out4(const unsigned long ntuples,
   assert(b != 0);
   FILE * out4 = create_file_if_not_exists(output_files.out4_name);
 
-  size_t line_num = floor((max-min)/b)+1;
+  double tmp_line_num = (double)floor((max-min)/b)+1;
+  size_t line_num = (size_t) tmp_line_num;
 
   fprintf(out4, "%.10lf\t%.10lf\n", min, max);
   size_t i_tuples=0;
@@ -329,7 +333,8 @@ int run(option_t *opt)
   double average = 0.0;
   double std = 0.0;
   double cutoff;
-  int d, n_vars, sign=1;
+  unsigned int d, n_vars;
+  double sign=1;
   unsigned long n_tuples, c;
 
   // open output file, get dimension and other information from header
@@ -393,7 +398,7 @@ int run(option_t *opt)
     {
       init_lookup_var(n_vars);
       fill_vars(n_tuples, d, opt->k, n_vars);
-      output_out3(n_vars, opt->k, d);
+      output_out3(n_vars, d);
       delete_lookup_var(n_vars);
     }
 
@@ -409,7 +414,7 @@ int run(option_t *opt)
       fprintf(stderr, "Cutoff:\t\t\t%.10f\n",cutoff);
 
       // count and print tuples above cutoff
-      c = count_tuples_bin_cutoff(opt, d, cutoff, n_tuples+1, average, std, sorted_tuple);
+      c = count_tuples_bin_cutoff(d, cutoff, n_tuples+1, average, std, sorted_tuple);
       fprintf(stderr, "Tuples Above Cutoff:\t%ld\t(%.2f%%)\n", c, 100.0*c/n_tuples);
     }
 

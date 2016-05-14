@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <float.h>
 #include <string.h>
+#include <assert.h>
 
 typedef int32_t var_t;
 
@@ -22,16 +23,16 @@ extern struct tuple *lookup_tuple;
 void init_lookup_tuple(const unsigned long ntuples);
 
 void fill_tuples(FILE * fbin,
-                 const int d,
+                 const size_t d,
                  const unsigned long n_tuples);
 
 void fprintf_tuple(FILE * out,
                    struct tuple* tuple,
-                   const int d);
+                   const size_t d);
 
 void write_tuple_to_file(FILE * const __restrict file,
                          const struct tuple * const __restrict _tuple,
-                         const int d);
+                         const size_t d);
 
 
 void sort_tuples_inplace(struct tuple * arr,
