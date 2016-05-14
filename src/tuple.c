@@ -83,7 +83,7 @@ void write_tuple_to_file(FILE * const __restrict file,
   fprintf(file, "%d\t%d\t", value[0], value[1]);
 
   // any others
-  for(size_t i = 2; i < d; ++i)
+  for(int i = 2; i < d; ++i)
     fprintf(file, "%d\t", value[i]);
 
   fprintf(file, "%.10lf\n", _tuple->avg);

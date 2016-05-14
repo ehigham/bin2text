@@ -254,8 +254,8 @@ void write_n_tuples_hi(const struct tuple * const __restrict tuples,
 {
 
   FILE * file = create_file_if_not_exists(output_files.out1_name);
-  if (n > n_tuples) n = n_tuples;
-  for (size_t i = 0; i < n; ++i)
+  if ((uint64_t)n > n_tuples) n = (int)n_tuples;
+  for (int i = 0; i < n; ++i)
       write_tuple_to_file(file, &tuples[i], d);
 
   fclose(file);
@@ -267,7 +267,7 @@ void write_n_tuples_lo(const struct tuple * const __restrict tuples,
                        const uint64_t n_tuples)
 {
   FILE * file = create_file_if_not_exists(output_files.out2_name);
-  if (n > n_tuples) n = n_tuples; 
+  if ((uint64_t)n > n_tuples) n = (int)n_tuples; 
   while (n > 0)
       write_tuple_to_file(file, &tuples[--n], d);
   
@@ -384,7 +384,7 @@ int run(option_t *opt)
       sorted_tuple = true;
     }
 
-    if (opt->n != 0) {
+    if (opt->n > 0) {
       write_n_tuples_hi(lookup_tuple, opt->n, d, n_tuples);
       write_n_tuples_lo(lookup_tuple, opt->n, d, n_tuples);
     }
