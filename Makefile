@@ -1,4 +1,4 @@
-CLFLAGS=-std=c11 $(INLINE_WARN) $(INLINE_LIMIT) -pthread
+CLFLAGS=-std=c11 $(INLINE_WARN) $(INLINE_LIMIT) -pthread -Wall -Wextra -Wconversion -pedantic-errors
 OPTIM = -O3 -march=native -DNDEGUG
 DEBUG = -O0 -g
 GPP=gcc
