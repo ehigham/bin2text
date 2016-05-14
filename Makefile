@@ -1,4 +1,6 @@
-CLFLAGS=-O3 -DNDEBUG -std=c11 $(INLINE_WARN) $(INLINE_LIMIT) -pthread
+CLFLAGS=-std=c11 $(INLINE_WARN) $(INLINE_LIMIT) -pthread
+OPTIM = -O3 -march=native -DNDEGUG
+DEBUG = -O0 -g
 GPP=gcc
 BASEDIR=.
 OBJDIR=$(BASEDIR)/obj
@@ -24,7 +26,11 @@ OBJS=$(OBJDIR)/strings.o \
 ##############################################################################
 #EXECUTABLES: add executables rules here
 
-all: search 
+debug: CFLAGS += $(DEBUG)
+debug: search
+
+all: CFLAGS += $(OPTIM)
+all: search
 
 search: $(OBJDIR)/search.oo
 	cp $(OBJDIR)/search.oo $(BIN)/run

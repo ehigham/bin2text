@@ -247,44 +247,43 @@ FILE * create_file_if_not_exists(const char * const filename)
   exit(-1);
 }
 
-void write_tuple_to_file(FILE * const file,
-                         const struct tuple * const tuples,
-                         const int d,
-                         const size_t tuple_idx)
+void write_tuple_to_file(FILE * const __restrict file,
+                         const struct tuple * const __restrict _tuple,
+                         const int d)
 {
-  const int32_t * const value = tuples[tuple_idx].tuples;
+  const var_t * const value = _tuple->tuples;
 
   // There are minimum 2 values per tuple 
-  fprintf(file, "%d\t%d\t", *value, *(value+1));
+  fprintf(file, "%d\t%d\t", value[0], value[1]);
 
   // any others
-  for (size_t j = 2; j < d; ++j)
-    fprintf(file, "%d\t", *(value + j));
+  for(size_t i = 2; i < d; ++i)
+    fprintf(file, "%d\t", value[i]);
 
-  fprintf(file, "%.10lf\n", tuples[tuple_idx].avg);
+  fprintf(file, "%.10lf\n", _tuple->avg);
 }
 
-void write_n_tuples_hi(const struct tuple * const tuples,
-                       const int n,
-                       const int d)
-{
-
-  FILE * file = create_file_if_not_exists(output_files.out1_name);
-  for (size_t i = 0; i < n; ++i)
-    write_tuple_to_file(file, tuples, d, i);
-
-  fclose(file);
-}
-
-void write_n_tuples_lo(const struct tuple * const tuples,
+void write_n_tuples_hi(const struct tuple * const __restrict tuples,
                        const int n,
                        const int d,
                        const uint64_t n_tuples)
 {
 
+  FILE * file = create_file_if_not_exists(output_files.out1_name);
+  for (size_t i = 0; (i < n) && (i < n_tuples) ; ++i)
+    write_tuple_to_file(file, &tuples[i], d);
+
+  fclose(file);
+}
+
+void write_n_tuples_lo(const struct tuple * const __restrict tuples,
+                       const int n,
+                       const int d,
+                       const uint64_t n_tuples)
+{
   FILE * file = create_file_if_not_exists(output_files.out2_name);
   for (size_t i = n_tuples-1; i > n_tuples - 1 - n; --i)
-    write_tuple_to_file(file, tuples, d, i);
+    write_tuple_to_file(file, tuples, d);
 
   fclose(file);
 }
@@ -409,7 +408,7 @@ int run(option_t *opt)
     }
 
     if (opt->n != 0) {
-      write_n_tuples_hi(lookup_tuple, opt->n, d);
+      write_n_tuples_hi(lookup_tuple, opt->n, d, n_tuples);
       write_n_tuples_lo(lookup_tuple, opt->n, d, n_tuples);
     }
 

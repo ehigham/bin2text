@@ -12,6 +12,7 @@ typedef int32_t var_t;
 //__attribute__((packed)) //TODO: to be considered
 struct tuple
 {
+  __attribute__((aligned(16)))
   var_t tuples[8];
   double avg;
 };
