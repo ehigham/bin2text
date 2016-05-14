@@ -3,13 +3,13 @@
 struct var *lookup_var;
 
 // ============================================================================
-void init_lookup_var(const int nvar)
+void init_lookup_var(const size_t nvar)
 {
   lookup_var = (struct var*) calloc(sizeof(struct var), nvar);
 }
 
 // ============================================================================
-void delete_lookup_var(const int nvar)
+void delete_lookup_var(const size_t nvar)
 {
 
   for(size_t i=0; i < nvar; ++i)
@@ -22,9 +22,9 @@ void delete_lookup_var(const int nvar)
 
 // ============================================================================
 void fill_vars(const unsigned long n_tuples,
-               const int d,
-               const int k,
-               const int nvar)
+               const size_t d,
+               const size_t k,
+               const size_t nvar)
 {
 
   for(size_t i=0; i < nvar; ++i)// TODO: too much memory maybe
@@ -62,6 +62,6 @@ void fill_vars(const unsigned long n_tuples,
 
   // normalize avg for each var
   for(size_t i=0; i < nvar; ++i)
-    lookup_var[i].avg /= lookup_var[i].count;
+    lookup_var[i].avg /= (double)lookup_var[i].count;
 
 }

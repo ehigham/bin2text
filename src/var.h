@@ -23,12 +23,12 @@ typedef int32_t var_t;
 
 extern struct var *lookup_var;
 
-void init_lookup_var(const int nvar);
+void init_lookup_var(const size_t nvar);
 
 void fill_vars(const unsigned long n_tuples,
-               const int d,
-               const int k,
-               const int nvar);
+               const size_t d,
+               const size_t k,
+               const size_t nvar);
 
 void delete_lookup_var();
 

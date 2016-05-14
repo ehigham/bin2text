@@ -39,7 +39,7 @@ union double_var_t
 #define BUF_SIZE 512
 // ============================================================================
 void fill_tuples(FILE * fbin,
-                 const int d,
+                 const size_t d,
                  const unsigned long n_tuples)
 {
   const size_t tuplesize = d + (sizeof(double)/sizeof(var_t));
@@ -49,6 +49,8 @@ void fill_tuples(FILE * fbin,
   size_t n;
   size_t i_tuple = 0;
   while ((n = fread(buffer, sizeof(var_t), bufsize,  fbin)))
+  {
+    assert(i_tuple <= n_tuples);
     while(n)
     {
       n -= tuplesize;
@@ -62,10 +64,11 @@ void fill_tuples(FILE * fbin,
 
       ++i_tuple;
     }
+  }
 }
 
 // ============================================================================
-void fprintf_tuple(FILE * out, struct tuple* tuple, const int d)
+void fprintf_tuple(FILE * out, struct tuple* tuple, const size_t d)
 {
   fprintf(out, "%lf", tuple->avg);
   for(size_t i=0; i < d; ++i)
@@ -75,7 +78,7 @@ void fprintf_tuple(FILE * out, struct tuple* tuple, const int d)
 
 void write_tuple_to_file(FILE * const __restrict file,
                          const struct tuple * const __restrict _tuple,
-                         const int d)
+                         const size_t d)
 {
   const var_t * const value = _tuple->tuples;
 
