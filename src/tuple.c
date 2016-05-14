@@ -2,19 +2,16 @@
 
 struct tuple *lookup_tuple;
 
-// ============================================================================
 void init_lookup_tuple(const unsigned long ntuples)
 {
   lookup_tuple = (struct tuple*) calloc(sizeof(struct tuple), ntuples);
 }
 
-// ============================================================================
 void delete_lookup_tuple()
 {
   free(lookup_tuple);
 }
 
-// ============================================================================
 int compare_tuples (const void * a, const void * b)
 {
   double xx = ((struct tuple*)a)->avg;
@@ -22,7 +19,6 @@ int compare_tuples (const void * a, const void * b)
   return (xx > yy) - (xx < yy);
 }
 
-// ============================================================================
 //TODO: this sort moves the tuples[8], might be unefficient
 void sort_tuples_inplace(struct tuple * arr, const unsigned long n_tuples)
 {
@@ -37,7 +33,6 @@ union double_var_t
 };
 
 #define BUF_SIZE 512
-// ============================================================================
 void fill_tuples(FILE * fbin,
                  const size_t d,
                  const unsigned long n_tuples)
@@ -67,7 +62,6 @@ void fill_tuples(FILE * fbin,
   }
 }
 
-// ============================================================================
 void fprintf_tuple(FILE * out, struct tuple* tuple, const size_t d)
 {
   fprintf(out, "%lf", tuple->avg);

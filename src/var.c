@@ -2,13 +2,11 @@
 
 struct var *lookup_var;
 
-// ============================================================================
 void init_lookup_var(const size_t nvar)
 {
   lookup_var = (struct var*) calloc(sizeof(struct var), nvar);
 }
 
-// ============================================================================
 void delete_lookup_var(const size_t nvar)
 {
 
@@ -20,7 +18,6 @@ void delete_lookup_var(const size_t nvar)
   free(lookup_var);
 }
 
-// ============================================================================
 void fill_vars(const unsigned long n_tuples,
                const size_t d,
                const size_t k,
