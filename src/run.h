@@ -5,9 +5,9 @@
 #ifndef RUN_H 
 #define RUN_H
 
-#include "resource/strings.h"
-
 #include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #define TUP_BUF_SIZE 10000
 

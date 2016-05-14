@@ -23,6 +23,10 @@
 #ifndef BIN2TEXT_RESOURCE_STRINGS_H
 #define BIN2TEXT_RESOURCE_STRINGS_H
 
+#include "../run.h"
+#include <stdlib.h>
+#include <stdio.h>
+
 struct output_filenames
 {
     const char * const out1_name;
@@ -32,7 +36,27 @@ struct output_filenames
     const char * const out5_name; 
 };
 
-extern const struct output_filenames output_files;
+struct output_files
+{
+    FILE * out1;
+    FILE * out2;
+    FILE * out3;
+    FILE * out4;
+    FILE * out5; 
+};
+
+extern const struct output_filenames output_filenames;
+
+/*
+ * Open files needed for outputing 
+ */
+struct output_files open_and_check_output_files(const option_t * opt);
+
+FILE * create_file_if_not_exists(const char * const __restrict filename);
+FILE * open_file_exit_if_error(const char* file);
+void close_file_exit_if_error(FILE* file, const char* message);
+void exit_if_empty_file(FILE * file, const char * message);
+
 
 #endif // BIN2TEXT_RESOURCE_STRINGS_H
 

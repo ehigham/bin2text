@@ -1,20 +1,28 @@
 #include "var.h"
 
-struct var *lookup_var;
+struct var *lookup_var = NULL;
+size_t * max_tuple_indexes = NULL;
+size_t * min_tuple_indexes = NULL;
 
-void init_lookup_var(const size_t nvar)
+void init_lookup_var(const size_t nvar,
+                     const size_t k)
 {
   lookup_var = (struct var*) calloc(sizeof(struct var), nvar);
-}
 
-void delete_lookup_var(const size_t nvar)
-{
+  max_tuple_indexes = (size_t*) calloc(sizeof(size_t), k*nvar);
+  min_tuple_indexes = (size_t*) calloc(sizeof(size_t), k*nvar);
 
   for(size_t i=0; i < nvar; ++i)
   {
-    free(lookup_var[i].tuple_indexes_max);
-    free(lookup_var[i].tuple_indexes_min);
+    lookup_var[i].tuple_indexes_max = &max_tuple_indexes[i*k];
+    lookup_var[i].tuple_indexes_min = &min_tuple_indexes[i*k];
   }
+}
+
+void delete_lookup_var()
+{
+  free(max_tuple_indexes);
+  free(min_tuple_indexes);
   free(lookup_var);
 }
 
@@ -24,34 +32,37 @@ void fill_vars(const unsigned long n_tuples,
                const size_t nvar)
 {
 
-  for(size_t i=0; i < nvar; ++i)// TODO: too much memory maybe
-  {
-    lookup_var[i].tuple_indexes_max = (size_t*) calloc(sizeof(size_t), k);
-    lookup_var[i].tuple_indexes_min = (size_t*) calloc(sizeof(size_t), k);
-  }
-  for(size_t i_tuple=0; i_tuple < n_tuples; ++i_tuple)// TODO: too much memory maybe
+  for(size_t i_tuple=0; i_tuple < n_tuples; ++i_tuple)
     for(size_t i=0; i < d; ++i)
     {
-      var_t var_index = lookup_tuple[i_tuple].tuples[i];
+      var_t var_index = lookup_tuple[i_tuple].values[i];
       lookup_var[var_index].avg += lookup_tuple[i_tuple].avg; // TODO: overflow risk
       ++lookup_var[var_index].count;
     }
 
   size_t beg = 0, end = n_tuples-1;
-  while (beg <= end) // TODO: heuristic counting the number of variable that need to be done, if 0=> exist
+  size_t nvar_to_be_processed = nvar * 2 *k;
+  while (nvar_to_be_processed 
+    && beg <= end)
   {
     for(size_t i=0; i < d; ++i)
     {
-      var_t var_index = lookup_tuple[beg].tuples[i];
+      var_t var_index = lookup_tuple[beg].values[i];
       if(lookup_var[var_index].size_tuple_min < k)
+      {
         lookup_var[var_index].tuple_indexes_min[lookup_var[var_index].size_tuple_min++] = beg;
+        --nvar_to_be_processed;
+      }
     }
 
     for(size_t i=0; i < d; ++i)
     {
-      var_t var_index = lookup_tuple[end].tuples[i];
+      var_t var_index = lookup_tuple[end].values[i];
       if(lookup_var[var_index].size_tuple_max < k)
+      {
         lookup_var[var_index].tuple_indexes_max[lookup_var[var_index].size_tuple_max++] = end;
+        --nvar_to_be_processed;
+      }
     }
     ++beg;
     --end;
@@ -61,4 +72,20 @@ void fill_vars(const unsigned long n_tuples,
   for(size_t i=0; i < nvar; ++i)
     lookup_var[i].avg /= (double)lookup_var[i].count;
 
+}
+
+void write_var_avg_and_participation(FILE* out3, const size_t nvar, const size_t d)
+{
+
+  for(var_t i=0; i < (var_t)nvar; ++i)
+  {
+    struct var * var = &lookup_var[i];
+    //if(var->count == 0) continue;
+    fprintf(out3, "%d\t%.10lf\n", i, var->avg);
+    for(size_t tindex = 0; tindex < var->size_tuple_max; ++tindex)
+      write_tuple_to_file(out3, &lookup_tuple[var->tuple_indexes_max[tindex]], d);
+
+    for(size_t tindex = 0; tindex < var->size_tuple_min; ++tindex)
+      write_tuple_to_file(out3, &lookup_tuple[var->tuple_indexes_min[tindex]], d);
+  }
 }
