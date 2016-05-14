@@ -248,27 +248,29 @@ FILE * create_file_if_not_exists(const char * const __restrict filename)
 }
 
 void write_n_tuples_hi(const struct tuple * const __restrict tuples,
-                       const int n,
+                       int n,
                        const int d,
                        const uint64_t n_tuples)
 {
 
   FILE * file = create_file_if_not_exists(output_files.out1_name);
-  for (size_t i = 0; (i < n) && (i < n_tuples) ; ++i)
-    write_tuple_to_file(file, &tuples[i], d);
+  if (n > n_tuples) n = n_tuples;
+  for (size_t i = 0; i < n; ++i)
+      write_tuple_to_file(file, &tuples[i], d);
 
   fclose(file);
 }
 
 void write_n_tuples_lo(const struct tuple * const __restrict tuples,
-                       const int n,
+                       int n,
                        const int d,
                        const uint64_t n_tuples)
 {
   FILE * file = create_file_if_not_exists(output_files.out2_name);
-  for (size_t i = n_tuples-1; i > n_tuples - 1 - n; --i)
-    write_tuple_to_file(file, tuples, d);
-
+  if (n > n_tuples) n = n_tuples; 
+  while (n > 0)
+      write_tuple_to_file(file, &tuples[--n], d);
+  
   fclose(file);
 }
 
