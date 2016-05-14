@@ -29,6 +29,11 @@ void fprintf_tuple(FILE * out,
                    struct tuple* tuple,
                    const int d);
 
+void write_tuple_to_file(FILE * const __restrict file,
+                         const struct tuple * const __restrict _tuple,
+                         const int d);
+
+
 void sort_tuples_inplace(struct tuple * arr,
                          const unsigned long n_tuples);
 

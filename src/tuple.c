@@ -72,3 +72,21 @@ void fprintf_tuple(FILE * out, struct tuple* tuple, const int d)
     fprintf(out, "\t%d", tuple->tuples[i]);
   fprintf(out, "\n");
 }
+
+void write_tuple_to_file(FILE * const __restrict file,
+                         const struct tuple * const __restrict _tuple,
+                         const int d)
+{
+  const var_t * const value = _tuple->tuples;
+
+  // There are minimum 2 values per tuple 
+  fprintf(file, "%d\t%d\t", value[0], value[1]);
+
+  // any others
+  for(size_t i = 2; i < d; ++i)
+    fprintf(file, "%d\t", value[i]);
+
+  fprintf(file, "%.10lf\n", _tuple->avg);
+}
+
+

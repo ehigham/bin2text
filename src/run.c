@@ -237,7 +237,7 @@ double calculate_std_bin(double average,
   return sqrtl(result);
 }
 
-FILE * create_file_if_not_exists(const char * const filename)
+FILE * create_file_if_not_exists(const char * const __restrict filename)
 {
   FILE * file = fopen(filename,"wx");
   if (file != NULL) return file;
@@ -245,22 +245,6 @@ FILE * create_file_if_not_exists(const char * const filename)
   fprintf(stderr, "Could not create file %s\n", filename);
   fprintf(stderr, "Please verify it does not already exit.\n");
   exit(-1);
-}
-
-void write_tuple_to_file(FILE * const __restrict file,
-                         const struct tuple * const __restrict _tuple,
-                         const int d)
-{
-  const var_t * const value = _tuple->tuples;
-
-  // There are minimum 2 values per tuple 
-  fprintf(file, "%d\t%d\t", value[0], value[1]);
-
-  // any others
-  for(size_t i = 2; i < d; ++i)
-    fprintf(file, "%d\t", value[i]);
-
-  fprintf(file, "%.10lf\n", _tuple->avg);
 }
 
 void write_n_tuples_hi(const struct tuple * const __restrict tuples,
@@ -290,12 +274,7 @@ void write_n_tuples_lo(const struct tuple * const __restrict tuples,
 
 void output_out3(const int nvar, const int k, const int d)
 {
-  FILE * out3 = fopen(output_files.out3_name, "wx");
-  if (!out3)
-  {
-    fprintf(stderr, "%s already exsiting!\n", output_files.out3_name);
-    exit(1);
-  }
+  FILE * out3 = create_file_if_not_exists(output_files.out3_name);
 
   for(var_t i=0; i < nvar; ++i)
   {
@@ -317,12 +296,8 @@ void output_out4(const unsigned long ntuples,
                  const double max)
 {
   assert(b != 0);
-  FILE * out4 = fopen(output_files.out4_name, "wx");
-  if (!out4)
-  {
-    fprintf(stderr, "%s already exsiting!\n", output_files.out4_name);
-    exit(1);
-  }
+  FILE * out4 = create_file_if_not_exists(output_files.out4_name);
+
   size_t line_num = floor((max-min)/b)+1;
 
   fprintf(out4, "%.10lf\t%.10lf\n", min, max);
