@@ -106,7 +106,7 @@ void check_binary_files(FILE          ** const __restrict fbin1,
   rewind(*fbin1);
   if(sz != 28)
   {
-    fprintf(stderr, "Error: ill-formed header\n");
+    fprintf(stderr, "Error: ill-form header\n");
     exit(-1);
   }
 
@@ -162,27 +162,31 @@ int32_t run(option_t *opt)
     {
       init_lookup_var(n_vars, opt->k);
       fill_vars(n_tuples, d, opt->k, n_vars);
-      write_var_avg_and_participation(output_files.out3,n_vars, d);
+      write_var_avg_and_participation(output_files.out3,n_vars, d, opt->k);
       close_file_exit_if_error(output_files.out3, "Error: closing out3.txt failed");
       delete_lookup_var();
     }
 
     if(opt->b != 0)
     {
-      write_scoring_histogram(output_files.out4,n_tuples, opt->b, lookup_tuple[0].avg, lookup_tuple[n_tuples-1].avg);
+      write_scoring_histogram(output_files.out4,
+                              n_tuples,
+                              opt->b,
+                              lookup_tuple[0].avg,
+                              lookup_tuple[n_tuples-1].avg);
       close_file_exit_if_error(output_files.out4, "Error: closing out4.txt failed");
     }
 
     // if -s is passed, pass through the file once to calculate std, and again to create out5.txt
     if (opt->s_option) 
     {
-      std = calculate_std_bin(average, d, n_tuples+1, sorted_tuple);
+      std = calculate_std_bin(average, d, n_tuples, sorted_tuple);
       cutoff = average + sign*std*opt->s_std;
       fprintf(stderr, "St. Dev.:\t\t%.10f\n",std);
       fprintf(stderr, "Cutoff:\t\t\t%.10f\n",cutoff);
 
       // count and print tuples above cutoff
-      c = count_tuples_bin_cutoff(output_files.out5,d, cutoff, n_tuples+1, average, std, sorted_tuple);
+      c = count_tuples_bin_cutoff(output_files.out5,d, cutoff, n_tuples, average, std, sorted_tuple);
       fprintf(stderr, "Tuples Above Cutoff:\t%ld\t(%.2f%%)\n", c, 100.0*c/n_tuples);
       close_file_exit_if_error(output_files.out5, "Error: closing out5.txt failed");
     }

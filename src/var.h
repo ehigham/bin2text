@@ -73,6 +73,9 @@ void delete_lookup_var();
  * Output a list of variable containing for each variable its own
  * average as well as the list of tuples where the variable is
  */
-void write_var_avg_and_participation(FILE* out3, const size_t nvar, const size_t d);
+void write_var_avg_and_participation(FILE* out3,
+                                     const size_t nvar,
+                                     const size_t d,
+                                     const size_t k);
 
 #endif

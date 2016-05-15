@@ -52,11 +52,11 @@ OBJS=$(OBJDIR)/strings.o \
 ##############################################################################
 #EXECUTABLES: add executables rules here
 
-debug: CFLAGS += $(DEBUG)
-debug: search
-
 all: CFLAGS += $(OPTIM)
 all: search
+
+debug: CFLAGS += $(DEBUG)
+debug: search
 
 search: $(OBJDIR)/search.oo
 	cp $(OBJDIR)/search.oo $(BIN)/run

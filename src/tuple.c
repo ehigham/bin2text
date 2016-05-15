@@ -121,12 +121,12 @@ void write_tuple_to_file(FILE * const __restrict file,
 #define PRINT_PRC_D "%.10lf%c"
 #endif
 uint64_t count_tuples_bin_cutoff(FILE * const __restrict fout5,
-                                      size_t d,
-                                      double cutoff,
-                                      uint64_t n_tuples,
-                                      double average,
-                                      double std,
-                                      bool lookup_tuple_sorted) 
+                                 size_t d,
+                                 double cutoff,
+                                 uint64_t n_tuples,
+                                 double average,
+                                 double std,
+                                 bool lookup_tuple_sorted) 
 {
   double next;
   uint64_t c = 0;
@@ -259,16 +259,22 @@ void write_scoring_histogram(FILE * const __restrict out4,
   double tmp_line_num = (double)floor((max-min)/b)+1;
   size_t line_num = (size_t) tmp_line_num;
 
+#ifdef DELTA_PREC
+  fprintf(out4, "%.10Lf\t%.10Lf\n", min, max);
+#else
   fprintf(out4, "%.10lf\t%.10lf\n", min, max);
+#endif
   size_t i_tuples=0;
   double max_bound = min;
   for(size_t i=0; i < line_num; ++i)
   {
     max_bound += b;
-    uint32_t counter = 0;
+    uint64_t counter = 0;
     // ntuples
-    while(i_tuples < ntuples && lookup_tuple[i_tuples].avg <= max_bound)
+    while(i_tuples < ntuples && lookup_tuple[i_tuples].avg < max_bound)
     {
+      if(fabs(lookup_tuple[i_tuples].avg - max_bound) < DBL_EPSILON)
+        break;
       ++counter;
       ++i_tuples;
     }

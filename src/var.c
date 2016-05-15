@@ -104,7 +104,10 @@ void fill_vars(const uint64_t n_tuples,
 
 }
 
-void write_var_avg_and_participation(FILE* out3, const size_t nvar, const size_t d)
+void write_var_avg_and_participation(FILE* out3,
+                                     const size_t nvar,
+                                     const size_t d,
+                                     const size_t k)
 {
 
   for(var_t i=0; i < (var_t)nvar; ++i)
@@ -115,6 +118,7 @@ void write_var_avg_and_participation(FILE* out3, const size_t nvar, const size_t
     for(size_t tindex = 0; tindex < var->size_tuple_max; ++tindex)
       write_tuple_to_file(out3, &lookup_tuple[var->tuple_indexes_max[tindex]], d);
 
+    if(var->size_tuple_max + var->size_tuple_min > 2*k)
     for(size_t tindex = 0; tindex < var->size_tuple_min; ++tindex)
       write_tuple_to_file(out3, &lookup_tuple[var->tuple_indexes_min[tindex]], d);
   }
