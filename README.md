@@ -1,7 +1,7 @@
-## bin2text
+# bin2text
 This software aims at providing a solution to the following problem:
-## 
-THE GATES FOUNDATION - BINARY TO TEXT SOFTWARE PERFORMANCE CHALLENGE IN C ##
+
+THE GATES FOUNDATION - BINARY TO TEXT SOFTWARE PERFORMANCE CHALLENGE IN C
 
 CHALLENGE OVERVIEW
 
@@ -138,15 +138,6 @@ Command Line options:
 
 - The software should use the command line options as used in the demo application:
 
-```
-#!bash
-Usage:   run [options] <input1> <input2>
-Options:
-         -n INT    number of sorted tuples for out1.txt and out2.txt
-         -k INT    number of sorted tuples for out3.txt
-         -b FLOAT  bin width for out4.txt
-         -s FLOAT  number of standard deviations for out5.txt
-```
 
 For threads we could have such option:
 ``` 
@@ -204,22 +195,27 @@ Clone the repository to your preferred directory:
 [user@hostname]~$ git clone <URL> && cd bin2text
 ```
 
-There are three build target configurations available: [all][debug][clean]. Invoke them with gmake:
+There are three build target configurations available: all, debug, clean [default: all]. Invoke the build system with gmake:
 
 ```
 #!bash
-[user@hostname]~bin2text$ make <target>
+[user@hostname]~bin2text$ make [target]
 ```
 
-```
-Give the example
-```
+## Usage
 
-And repeat
+The usage of the program is as follows:
 
 ```
-until finished
+#!bash
+Usage:   run [options] <input1> <input2>
+Options:
+         -n INT    number of sorted tuples for out1.txt and out2.txt
+         -k INT    number of sorted tuples for out3.txt
+         -b FLOAT  bin width for out4.txt
+         -s FLOAT  number of standard deviations for out5.txt
 ```
+
 
 End with an example of getting some data out of the system or using it for a little demo
 
