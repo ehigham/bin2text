@@ -100,6 +100,15 @@ void check_binary_files(FILE** fbin1,
   exit_if_empty_file(*fbin1, "Error: empty binary file 1  \n");
   exit_if_empty_file(*fbin2, "Error: empty binary file 2  \n");
 
+  fseek(*fbin1, 0L, SEEK_END);
+  size_t sz = ftell(*fbin1);
+  rewind(*fbin1);
+  if(sz != 28)
+  {
+    fprintf(stderr, "Error: ill-formed header\n");
+    exit(-1);
+  }
+
   get_header(*fbin1, d, n_vars, n_tuples, average);
   close_file_exit_if_error(*fbin1, "Error closing binary file 1.\n");
 }
