@@ -1,6 +1,3 @@
-# bin2text
-This software aims at providing a solution to the following problem:
-
 THE GATES FOUNDATION - BINARY TO TEXT SOFTWARE PERFORMANCE CHALLENGE IN C
 
 CHALLENGE OVERVIEW
@@ -107,7 +104,7 @@ out5.txt: extra, unsorted tuples and distance from avg score
 
 This file is only created if the value s is passed. 
 
-This file will contain all tuples and corresponding scores above avg + (s\*std) if dimension d is even, or below avg-(s\*std) if dimension d is odd. The format of each tuple will look like out1.txt and out2.txt, except there will be an extra column (separated by tab) indicating how many standard deviations away from the mean the tuple score is.
+This file will contain all tuples and corresponding scores above avg + (s*std) if dimension d is even, or below avg-(s*std) if dimension d is odd. The format of each tuple will look like out1.txt and out2.txt, except there will be an extra column (separated by tab) indicating how many standard deviations away from the mean the tuple score is.
 
 A few things to note:
 
@@ -121,18 +118,17 @@ Command Line options:
 
 - The software should use the command line options as used in the demo application:
 
-```
 Usage:   run [options] <input1> <input2>
 Options:
          -n INT    number of sorted tuples for out1.txt and out2.txt
          -k INT    number of sorted tuples for out3.txt
          -b FLOAT  bin width for out4.txt
          -s FLOAT  number of standard deviations for out5.txt
-```
+ 
 For threads we could have such option:
-``` 
+ 
          -t INT  number of threads
-```
+
 If you use threads, you should choose what you consider the best configuration, and use it as the default configuration if the -t command line option is not used. Please mention in the documentation which is the default value. If you do use threads, you may suggest some other option you think might be better, and we'll test with that option also.
 For performance testing we will use big values for the -n and -k options (the maximum values, or close to the maximum).
 For -b and -s options, we will choose some values that will produce files containing a number of records equal to 25%-75% of the number of tuples from the input file.
@@ -143,9 +139,7 @@ Other Requirements:
 
 - The software can keep all tuples and scores needed for output files in RAM (determined by k and n), and should not use more than 4GB of RAM on top of this. If k=0, n=0, and b=0, the program should not use more than 4GB RAM.  We will be scoring the submissions based on the efficiency of their RAM usage compared to each other.  The weighting for RAM Usage is 25% of the total score.   
 Note: Valgrind compatibility is a requirement.   We will test it with the command below and will take into consideration the maximum live memory. If the test crashes and we get no result, the score will be 1.
-```
     valgrind --tool=exp-dhat <command>
-```
 
 - Parallelization is OK using pthreads.
 
@@ -157,86 +151,10 @@ Note: Valgrind compatibility is a requirement.   We will test it with the comman
 
 - The software will be judged on speed for various input files and values of n,k,b. The program should run fastest when n,k, and b are 0.  The submissions will be compared to each other to generate a execution speed score.  The weighting for this execution speed element is 25%.  Please review the scorecard to understand the details of the performance scoring elements.
 
+Source code and Sample input files:
 
-## Getting Started
+Here is a link to the existing source code and sample input files that we will use for testing:
+https://drive.google.com/open?id=0BycYpuMUQwQwdnRtSFBjcFIzcnM
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisities
-
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
-
-### Installing
-
-A step by step series of examples that tell you have to get a development env running
-
-Stay what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* Dropwizard - Bla bla bla
-* Maven - Maybe
-* Atom - ergaerga
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Thomas Legris** - [noboruma](https://github.com/noboruma)
-* **Edmund Higham** - [ehigham](https://github.com/ehigham)
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
+The source code handles the command line arguments and provides an implementation for reading the input files and producing file out5.txt.
+You need to implement the rest of the functionality, and you are encouraged to try to improve the existing code, because all the functionality will count during testing.
