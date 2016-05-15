@@ -212,7 +212,6 @@ void write_n_tuples_hi(FILE * const __restrict file,
                        const int d,
                        const uint64_t n_tuples)
 {
-  assert(n_tuples > 0);
   if ((uint64_t)n > n_tuples) n = (int)n_tuples;
   while (n > 0)
       write_tuple_to_file(file, &tuples[--n], d);
