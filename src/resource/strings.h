@@ -1,4 +1,6 @@
 /* strings.h
+ *
+ * Defines common strings and io subroutines used in bin2text
  * 
  * MIT License
  * 
