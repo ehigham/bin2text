@@ -72,7 +72,8 @@ FILE * create_file_if_not_exists(const char * const __restrict filename)
   if (file != NULL) return file;
 
   fprintf(stderr, "Could not create file %s\n", filename);
-  fprintf(stderr, "Please verify it does not already exit.\n");
+  fprintf(stderr, "Please verify it does not already exist ");
+  fprintf(stderr, "and/or you have the correct write permissions.\n");
   exit(-1);
 }
 
