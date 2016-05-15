@@ -81,7 +81,7 @@ double        | 8           | avg       | average of all scores
 
 The program asserts that **<input1>** is 28 bytes as one of the safety checks before main execution.
 
-**<input2>** is a binary file containing the data needed to run. The size of the data is determined by <input1>.
+**<input2>** is a binary file containing the data needed to run. The size of the data is determined by **<input1>**.
 It has the following representation:
 
 ```
