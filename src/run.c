@@ -51,28 +51,29 @@
 
 
 // read and store header information
-int get_header(FILE* fbin,
-               unsigned int *d,
-               unsigned int *n_vars,
-               unsigned long *n_tuples,
-               double *average) {
+int32_t get_header(FILE     * const __restrict fbin,
+                   uint32_t * const __restrict d,
+                   uint32_t * const __restrict n_vars,
+                   uint64_t * const __restrict n_tuples,
+                   double   * const __restrict average)
+{
   size_t err;
-  err = fread(d, 1, sizeof(int), fbin);
+  err = fread(d, 1, sizeof(int32_t), fbin);
   if (!err) {
     fprintf(stderr, "Error: couldn't read dummy 0 from file\n");
     return -1;
   }
-  err = fread(d, 1, sizeof(int), fbin);
+  err = fread(d, 1, sizeof(int32_t), fbin);
   if (!err) {
     fprintf(stderr, "Error: couldn't read dimension from file\n");
     return -1;
   }
-  err = fread(n_vars, 1, sizeof(int), fbin);
+  err = fread(n_vars, 1, sizeof(int32_t), fbin);
   if (!err) {
     fprintf(stderr, "Error: couldn't read n_vars from file\n");
     return -1;
   }
-  err = fread(n_tuples, 1, sizeof(unsigned long), fbin);
+  err = fread(n_tuples, 1, sizeof(uint64_t), fbin);
   if (!err) {
     fprintf(stderr, "Error: couldn't read n_tuples from file\n");
     return -1;
@@ -85,13 +86,13 @@ int get_header(FILE* fbin,
   return 0;
 }
 
-void check_binary_files(FILE** fbin1,
-                        FILE** fbin2,
-                        const option_t *opt,
-                        unsigned int *d,
-                        unsigned int *n_vars,
-                        unsigned long *n_tuples,
-                        double *average)
+void check_binary_files(FILE          ** const __restrict fbin1,
+                        FILE          ** const __restrict fbin2,
+                        const option_t * const __restrict opt,
+                        uint32_t       * const __restrict d,
+                        uint32_t       * const __restrict n_vars,
+                        uint64_t       * const __restrict n_tuples,
+                        double         * const __restrict average)
 {
   // open output file, get dimension and other information from header
   *fbin1 = open_file_exit_if_error(opt->in_file1);
@@ -105,16 +106,16 @@ void check_binary_files(FILE** fbin1,
 }
 
 // main function 
-int run(option_t *opt) 
+int32_t run(option_t *opt) 
 {
   FILE* fbin1;
   FILE* fbin2;
   double average = 0.0;
   double std = 0.0;
   double cutoff;
-  unsigned int d, n_vars;
+  uint32_t d, n_vars;
   double sign=1;
-  unsigned long n_tuples, c;
+  uint64_t n_tuples, c;
 
   check_binary_files(&fbin1, &fbin2, opt, &d, &n_vars, &n_tuples, &average);
   const struct output_files output_files = open_and_check_output_files(opt);

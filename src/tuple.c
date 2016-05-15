@@ -32,7 +32,7 @@
 struct tuple *lookup_tuple = NULL;
 var_t *tuple_values = NULL;
 
-void init_lookup_tuple(const unsigned long ntuples,
+void init_lookup_tuple(const uint64_t ntuples,
                        const size_t d)
 {
   lookup_tuple = (struct tuple*) calloc(sizeof(struct tuple), ntuples);
@@ -48,14 +48,14 @@ void delete_lookup_tuple()
   free(tuple_values);
 }
 
-int compare_tuples (const void * a, const void * b)
+int32_t compare_tuples (const void * a, const void * b)
 {
   double xx = ((struct tuple*)a)->avg;
   double yy = ((struct tuple*)b)->avg;
   return (xx > yy) - (xx < yy);
 }
 
-void sort_tuples_inplace(struct tuple * arr, const unsigned long n_tuples)
+void sort_tuples_inplace(struct tuple * arr, const uint64_t n_tuples)
 {
   // std
   qsort(arr, n_tuples, sizeof(struct tuple), compare_tuples);
@@ -70,7 +70,7 @@ union double_var_t
 #define BUF_SIZE 4096
 void fill_tuples(FILE *  const __restrict fbin,
                  const size_t d,
-                 const unsigned long n_tuples)
+                 const uint64_t n_tuples)
 {
   const size_t tuplesize = d + (sizeof(double)/sizeof(var_t));
   const size_t bufsize = BUF_SIZE * tuplesize;
@@ -120,16 +120,16 @@ void write_tuple_to_file(FILE * const __restrict file,
 #else
 #define PRINT_PRC_D "%.10lf%c"
 #endif
-unsigned long count_tuples_bin_cutoff(FILE * const __restrict fout5,
+uint64_t count_tuples_bin_cutoff(FILE * const __restrict fout5,
                                       size_t d,
                                       double cutoff,
-                                      long unsigned n_tuples,
+                                      uint64_t n_tuples,
                                       double average,
                                       double std,
                                       bool lookup_tuple_sorted) 
 {
   double next;
-  unsigned long c = 0;
+  uint64_t c = 0;
   if(lookup_tuple_sorted)
   {
     if(d%2)
@@ -182,8 +182,8 @@ unsigned long count_tuples_bin_cutoff(FILE * const __restrict fout5,
 
 // calculate standard deviation, min and max delta
 double calculate_std_bin(double average,
-                         int d,
-                         const unsigned long n_tuples,
+                         uint32_t d,
+                         const uint64_t n_tuples,
                          bool lookup_tuple_sorted) 
 {
   double next;
@@ -226,22 +226,22 @@ double calculate_std_bin(double average,
 
 void write_n_tuples_lo(FILE * const __restrict file,
                        const struct tuple * const __restrict tuples,
-                       int n,
-                       const int d,
+                       uint32_t n,
+                       const uint32_t d,
                        const uint64_t n_tuples)
 {
-  if ((uint64_t)n > n_tuples) n = (int)n_tuples;
-  for (int i = 0; i < n; ++i)
+  if ((uint64_t)n > n_tuples) n = (uint32_t)n_tuples;
+  for (uint32_t i = 0; i < n; ++i)
       write_tuple_to_file(file, &tuples[i], d);
 }
 
 void write_n_tuples_hi(FILE * const __restrict file,
                        const struct tuple * const __restrict tuples,
-                       int n,
-                       const int d,
+                       uint32_t n,
+                       const uint32_t d,
                        const uint64_t n_tuples)
 {
-  if ((uint64_t)n > n_tuples) n = (int)n_tuples;
+  if ((uint64_t)n > n_tuples) n = (uint32_t)n_tuples;
   const uint64_t last_idx = n_tuples - (uint64_t)n;
   uint64_t idx = n_tuples;
   while (idx > last_idx)
@@ -249,7 +249,7 @@ void write_n_tuples_hi(FILE * const __restrict file,
 }
 
 void write_scoring_histogram(FILE * const __restrict out4,
-                             const unsigned long ntuples,
+                             const uint64_t ntuples,
                              const double b, 
                              const double min,
                              const double max)

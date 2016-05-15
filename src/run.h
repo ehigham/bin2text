@@ -25,10 +25,6 @@
  * SOFTWARE.
 **/
 
-
-
-
-
 // Paul Draghicescu
 // pdraghicescu@pnri.org
 //
@@ -39,28 +35,25 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 
 #define TUP_BUF_SIZE 10000
 
 typedef struct option {
-    unsigned int n, k;
+    uint32_t n, k;
     double b, s_std;
-    int s_option;
+    int32_t s_option;
     char in_file1[50];
     char in_file2[50];
 } option_t;
 
-int get_header(FILE* fbin,
-               unsigned int *d,
-               unsigned int *n_vars,
-               unsigned long *n_tuples,
-               double *average);
-int run(option_t *opt);
-//double calculate_std_bin(FILE* fbin, double average, int d, unsigned long n_tuples);
-double calculate_std_bin(double average,
-                         int d,
-                         unsigned long n_tuples,
-                         bool sorted_tuple);
+int32_t get_header(FILE     * const __restrict fbin,
+                   uint32_t * const __restrict d,
+                   uint32_t * const __restrict n_vars,
+                   uint64_t * const __restrict n_tuples,
+                   double   * const __restrict average);
+
+int32_t run(option_t *opt);
 
 #endif
 

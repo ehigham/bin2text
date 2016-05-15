@@ -56,7 +56,7 @@ void delete_lookup_var()
   free(lookup_var);
 }
 
-void fill_vars(const unsigned long n_tuples,
+void fill_vars(const uint64_t n_tuples,
                const size_t d,
                const size_t k,
                const size_t nvar)
