@@ -157,44 +157,6 @@ For example, if b=0.01, and the scores in the input file are 0.0100, 0.0120, 0.0
 [user@hostname]~/bin2text$ ./run -n 1024 -k 64 input1 input2
 ```
 
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* Dropwizard - Bla bla bla
-* Maven - Maybe
-* Atom - ergaerga
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [git](https://git-scm.com/) for versioning. 
-
 ## Authors
 
 * **Thomas Legris** - [noboruma](https://github.com/noboruma)
@@ -206,6 +168,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
+* Caffeine
+* Alcohol
+* Nicotine
