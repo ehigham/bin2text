@@ -1,7 +1,7 @@
-# bin2text
+# bin2text #
 This software aims at providing a solution to the following problem:
-
-THE GATES FOUNDATION - BINARY TO TEXT SOFTWARE PERFORMANCE CHALLENGE IN C
+## 
+THE GATES FOUNDATION - BINARY TO TEXT SOFTWARE PERFORMANCE CHALLENGE IN C ##
 
 CHALLENGE OVERVIEW
 
@@ -36,6 +36,8 @@ Input file 1:
 This binary file gives information about the main binary file. It is exactly 28 bytes.
 
 ```
+#!text
+
 
 type          | bytes       | field     | description
 -----------------------------------------------------
@@ -46,13 +48,14 @@ unsigned long | 8           | n_tups    | number of tuples
 double        | 8           | avg       | average of all scores
 ----------------------------------------------------------------
               | 28 bytes total
-
 ```
+
 
 Input file 2:
 This is the main input file. It's size is determined by the values in the first binary file.
 
 ```
+#!text
 
 type          | bytes       | field     | description
 -----------------------------------------------------
@@ -85,6 +88,7 @@ Similar to out1.txt. Text file containing n tuples, with the lowest score, sorte
 For out1.txt and out2.txt, tuples are printed 1 per line, values separated by a tab, and the score of the tuple at the end with 10 digits beyond the decimal points. For example, a tuple of dimension 3, with the variables 4 5 and 6 and a score of 0.01 would look like:
 
 ```
+#!text
 4    5    6    0.0100000000
 ```
 
@@ -98,6 +102,8 @@ The first line of this file will be the minimum and maximum score in the file, r
 
 For example, if b=0.01, and the scores in the input file are 0.0100, 0.0120, 0.0299, 0.0300, 0.0310, 0.060, 0.100 then the output file should have 11 lines total and look like.
 
+```
+#!text
 0.0100000000    0.1000000000
 2
 1
@@ -109,6 +115,7 @@ For example, if b=0.01, and the scores in the input file are 0.0100, 0.0120, 0.0
 0
 0
 1
+```
 
 The sum of the numbers in each line (excluding first line) should equal total number of tuples in the input file (n_tups).
 Note that there are 10 bins: [0.01, 0.02), [0.02, 0.03), ..., [0.09, 0.10), [0.10, 0.11). There is a need for the 10th bin in order to include the border value 0.100, which is not included in the 9th bin.
@@ -132,6 +139,7 @@ Command Line options:
 - The software should use the command line options as used in the demo application:
 
 ```
+#!bash
 Usage:   run [options] <input1> <input2>
 Options:
          -n INT    number of sorted tuples for out1.txt and out2.txt
@@ -139,8 +147,10 @@ Options:
          -b FLOAT  bin width for out4.txt
          -s FLOAT  number of standard deviations for out5.txt
 ```
+
 For threads we could have such option:
 ``` 
+#!bash
          -t INT  number of threads
 ```
 If you use threads, you should choose what you consider the best configuration, and use it as the default configuration if the -t command line option is not used. Please mention in the documentation which is the default value. If you do use threads, you may suggest some other option you think might be better, and we'll test with that option also.
