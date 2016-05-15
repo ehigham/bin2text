@@ -111,9 +111,45 @@ double        | 8           | tlast_s   | last tuple score
 
 NOTE: IF ANY OF THESE FILES EXISTS PRIOR TO EXECUTION, THE PROGRAM WILL ERROR AND QUIT.
 
-**out1.txt** - text file containing **n** tuples with the highest score, sorted by maximum score. If **n**=0, this file is not touched.
-**out2.txt** - text file containing **n** tuples with the lowest score, sorted by minimum score. If **n**=0, this file is not touched.
+**out1.txt** - top tuples sorted:
 
+text file containing **n** tuples with the highest score, sorted by maximum score. If **n** = 0, this file is not touched.
+
+**out2.txt** - bottom tuples sorted:
+
+text file containing **n** tuples with the lowest score, sorted by minimum score. If **n** = 0, this file is not touched.
+
+For out1.txt and out2.txt, tuples are printed 1 per line, values separated by a tab, and the score of the tuple at the end with 10 digits beyond the decimal points. For example, a tuple of dimension 3, with the variables 4 5 and 6 and a score of 0.01 would look like:
+
+```
+#!text
+4    5    6    0.0100000000
+```
+
+**out3.txt**: sorted tuples by variable
+
+This file contains at most (2*k) + 1 lines for each value (variable) that appears in at least 1 tuple. The first line contains the variable number, the average of scores for all tuples that contain the variable, all separated by a tab. The next k lines are the highest scoring tuples that contain the variable , sorted by maximal score. The next k lines are the lowest scoring tuples that contain the variable, sorted by minimal score. If there are fewer than k tuples that contain the value, print all of the tuples that contain the value.
+
+**out4.txt**: histogram
+
+The first line of this file will be the minimum and maximum score in the file, respectively, separated by a tab. If b > 0, there will be floor((max-min)/b)+1 lines following the first line. Each line has a count of how many scores fall in the range determined by the bin size b, starting at the minimum value. So line 2 should have a count of scores in the range [min, b+min), line 3 has count of scores in [min+b, (2*b)+min), etc.
+
+For example, if b=0.01, and the scores in the input file are 0.0100, 0.0120, 0.0299, 0.0300, 0.0310, 0.060, 0.100 then the output file should have 11 lines total and look like.
+
+```
+#!text
+0.0100000000    0.1000000000
+2
+1
+2
+0
+0
+1
+0
+0
+0
+1
+```
 
 
 End with an example of getting some data out of the system or using it for a little demo
