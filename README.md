@@ -201,7 +201,7 @@ Clone the repository to your preferred directory:
 
 ```
 #!bash
-[user@hostname]~/$ git clone <URL> && cd bin2text
+[user@hostname]~$ git clone <URL> && cd bin2text
 ```
 
 There are three build target configurations available: [all][debug][clean]. Invoke them with gmake:
@@ -211,7 +211,7 @@ There are three build target configurations available: [all][debug][clean]. Invo
 [user@hostname]~bin2text$ make <target>
 ```
 
-
+```
 Give the example
 ```
 
