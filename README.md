@@ -178,9 +178,8 @@ This project is licensed under the MIT License - see the [LICENCE.md](LICENCE.md
 
 ## Known Issues
 
-* The total average scoring for variable might overflow if the variable is refered too many times.
+-
 
 ## Ways of Improvement
 
 * Add multi-threading support to sorting algorithm
-* Replace the variable global score computation overflow assertion by a better mechanism (list).
