@@ -39,7 +39,7 @@ union double_var_t
 };
 
 #define BUF_SIZE 4096
-void fill_tuples(FILE * fbin,
+void fill_tuples(FILE *  const __restrict fbin,
                  const size_t d,
                  const unsigned long n_tuples)
 {
@@ -91,7 +91,7 @@ void write_tuple_to_file(FILE * const __restrict file,
 #else
 #define PRINT_PRC_D "%.10lf%c"
 #endif
-unsigned long count_tuples_bin_cutoff(FILE* fout5,
+unsigned long count_tuples_bin_cutoff(FILE * const __restrict fout5,
                                       size_t d,
                                       double cutoff,
                                       long unsigned n_tuples,
@@ -219,7 +219,7 @@ void write_n_tuples_hi(FILE * const __restrict file,
       write_tuple_to_file(file, &tuples[--idx], d);
 }
 
-void write_scoring_histogram(FILE*out4,
+void write_scoring_histogram(FILE * const __restrict out4,
                              const unsigned long ntuples,
                              const double b, 
                              const double min,
