@@ -121,17 +121,18 @@ Command Line options:
 
 - The software should use the command line options as used in the demo application:
 
+```
 Usage:   run [options] <input1> <input2>
 Options:
          -n INT    number of sorted tuples for out1.txt and out2.txt
          -k INT    number of sorted tuples for out3.txt
          -b FLOAT  bin width for out4.txt
          -s FLOAT  number of standard deviations for out5.txt
- 
+```
 For threads we could have such option:
- 
+``` 
          -t INT  number of threads
-
+```
 If you use threads, you should choose what you consider the best configuration, and use it as the default configuration if the -t command line option is not used. Please mention in the documentation which is the default value. If you do use threads, you may suggest some other option you think might be better, and we'll test with that option also.
 For performance testing we will use big values for the -n and -k options (the maximum values, or close to the maximum).
 For -b and -s options, we will choose some values that will produce files containing a number of records equal to 25%-75% of the number of tuples from the input file.
@@ -142,7 +143,9 @@ Other Requirements:
 
 - The software can keep all tuples and scores needed for output files in RAM (determined by k and n), and should not use more than 4GB of RAM on top of this. If k=0, n=0, and b=0, the program should not use more than 4GB RAM.  We will be scoring the submissions based on the efficiency of their RAM usage compared to each other.  The weighting for RAM Usage is 25% of the total score.   
 Note: Valgrind compatibility is a requirement.   We will test it with the command below and will take into consideration the maximum live memory. If the test crashes and we get no result, the score will be 1.
+```
     valgrind --tool=exp-dhat <command>
+```
 
 - Parallelization is OK using pthreads.
 
@@ -225,9 +228,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Thomas Legris** - [noboruma](https://github.com/noboruma)
+* **Edmund Higham** - [ehigham](https://github.com/ehigham)
 
 ## License
 
