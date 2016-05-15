@@ -12,7 +12,8 @@
 #include <float.h>
 #include "run.h"
 
-int parse_args(int argc, char* argv[], option_t* opt) { 
+int parse_args(int argc, char* argv[], option_t* opt)
+{ 
   int c;
   while (--argc > 0 && (*++argv)[0] == '-')
     while ((c = *++argv[0]))
@@ -76,7 +77,8 @@ int parse_args(int argc, char* argv[], option_t* opt) {
   return 0;
 }
 
-int init_options(option_t *opt) {
+int init_options(option_t *opt)
+{
   opt->n = 0;
   opt->k = 0;
   opt->b = 0;
@@ -85,7 +87,8 @@ int init_options(option_t *opt) {
   return 0;
 }
 
-int main(int argc, char * argv[]) {
+int main(int argc, char * argv[])
+{
   int err;
   time_t ltime;
   option_t opt;
