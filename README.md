@@ -1,4 +1,4 @@
-# bin2text #
+## bin2text ##
 This software aims at providing a solution to the following problem:
 ## 
 THE GATES FOUNDATION - BINARY TO TEXT SOFTWARE PERFORMANCE CHALLENGE IN C ##
