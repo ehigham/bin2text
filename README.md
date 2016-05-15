@@ -29,14 +29,14 @@ This project has no dependencies on 3rd party libraries other than those shipped
 Clone the repository to your preferred directory:
 
 ```
-#!/bin/bash
+#!bash
 [user@hostname]~$ git clone <URL> && cd bin2text
 ```
 
 There are three build target configurations available: all, debug, clean [default: all]. Invoke the build system with gmake:
 
 ```
-#!/bin/bash
+#!bash
 [user@hostname]~/bin2text$ make [target]
 ```
 
@@ -45,7 +45,7 @@ There are three build target configurations available: all, debug, clean [defaul
 The program is intended as a command line application, whose usage is as follows:
 
 ```
-#!/bin/bash
+#!bash
 Usage:   run [options] <input1> <input2>
 Options:
          -n INT    number of sorted tuples for out1.txt and out2.txt [default: 0]
