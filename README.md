@@ -3,7 +3,7 @@ This software aims at providing a solution to the following problem:
 
 ## THE GATES FOUNDATION - BINARY TO TEXT SOFTWARE PERFORMANCE CHALLENGE IN C
 
-You can read the full challenge overview at [this](https://www.topcoder.com/challenge-details/30053925/?type=develop) website or as [plain text](CHALLENGE_OVERVIEW.txt)
+You can read the full challenge overview [here](https://www.topcoder.com/challenge-details/30053925/?type=develop) website or as [plain text](CHALLENGE_OVERVIEW.txt).
 
 
 ## Getting Started
@@ -41,7 +41,7 @@ There are three build target configurations available: all, debug, clean [defaul
 
 ## Usage
 
-The usage of the program is as follows:
+The program is intended as a command line application, whose usage is as follows:
 
 ```
 #!bash
@@ -52,6 +52,43 @@ Options:
          -b FLOAT  bin width for out4.txt
          -s FLOAT  number of standard deviations for out5.txt
 ```
+
+<input1> in a binary file, 28 Bytes in size, with the following representation:
+
+```
+#!text
+type          | bytes       | field     | description
+-----------------------------------------------------
+signed int    | 4           | 0         | zero
+signed int    | 4           | d         | dimension (# ints in each tuple) 
+signed int    | 4           | n_vars    | number of variables total
+unsigned long | 8           | n_tups    | number of tuples
+double        | 8           | avg       | average of all scores
+----------------------------------------------------------------
+              | 28 bytes total
+```
+
+The program asserts that <input1> is 28 bytes as one of the safety checks before main execution.
+
+<input2> is a binary file containing the data needed to run. The size of the data is determined by <input1>.
+It has the following representation:
+
+```
+#!text
+type          | bytes       | field     | description
+-----------------------------------------------------
+int[]         | d*4         | t1        | tuple 1
+double        | 8           | t1_s      | tuple 1 score
+int[]         | d*4         | t2        | tuple 2
+double        | 8           | t2_s      | tuple 2 score
+...            ...            ...        ...
+int[]         | d*4         | tlast     | last tuple
+double        | 8           | tlast_s   | last tuple score
+-----------------------------------------------------------
+              | n_tups*((4*d)+8) bytes total
+
+```
+
 
 
 End with an example of getting some data out of the system or using it for a little demo
