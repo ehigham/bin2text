@@ -49,27 +49,22 @@ Usage:   run [options] <input1> <input2>
 Options:
          -n INT    number of sorted tuples for out1.txt and out2.txt [default: 0]
          -k INT    number of sorted tuples for out3.txt              [default: 0]
-         -b FLOAT  bin width for out4.txt                            [default: 
+         -b FLOAT  bin width for out4.txt                            [default: 0]
          -s FLOAT  number of standard deviations for out5.txt
 ```
 
 Input:
 
-- 2 binary files, *<input1>* and *<input2>* format described below
-- 1 unsigned int *n* (4 bytes, 0 <= n <= 1,000,000)
-- 1 unsigned int *k* (4 bytes, 0 <= k <= 100,000)
-- 1 double *b* (8 bytes, 0 <= b <= 1)
+- 2 binary files, **<input1>** and **<input2>** format described below
+- 1 unsigned int **n** (4 bytes, 0 <= n <= 1,000,000)
+- 1 unsigned int **k** (4 bytes, 0 <= k <= 100,000)
+- 1 double **b** (8 bytes, 0 <= b <= 1)
 
 Optional:
 
-- 1 double *s* (8 bytes, -100,000 <= s <= 100,000)
+- 1 double **s** (8 bytes, -100,000 <= s <= 100,000)
 
-Output:
-
-
-
-
-<input1> in a binary file, 28 Bytes in size, with the following representation:
+**<input1>** in a binary file with the following representation:
 
 ```
 #!text
@@ -84,9 +79,9 @@ double        | 8           | avg       | average of all scores
               | 28 bytes total
 ```
 
-The program asserts that <input1> is 28 bytes as one of the safety checks before main execution.
+The program asserts that **<input1>** is 28 bytes as one of the safety checks before main execution.
 
-<input2> is a binary file containing the data needed to run. The size of the data is determined by <input1>.
+**<input2>** is a binary file containing the data needed to run. The size of the data is determined by <input1>.
 It has the following representation:
 
 ```
@@ -104,8 +99,6 @@ double        | 8           | tlast_s   | last tuple score
               | n_tups*((4*d)+8) bytes total
 
 ```
-
-
 
 End with an example of getting some data out of the system or using it for a little demo
 
