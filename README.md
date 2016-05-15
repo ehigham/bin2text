@@ -47,11 +47,27 @@ The program is intended as a command line application, whose usage is as follows
 #!bash
 Usage:   run [options] <input1> <input2>
 Options:
-         -n INT    number of sorted tuples for out1.txt and out2.txt
-         -k INT    number of sorted tuples for out3.txt
-         -b FLOAT  bin width for out4.txt
+         -n INT    number of sorted tuples for out1.txt and out2.txt [default: 0]
+         -k INT    number of sorted tuples for out3.txt              [default: 0]
+         -b FLOAT  bin width for out4.txt                            [default: 
          -s FLOAT  number of standard deviations for out5.txt
 ```
+
+Input:
+
+- 2 binary files, *<input1>* and *<input2>* format described below
+- 1 unsigned int *n* (4 bytes, 0 <= n <= 1,000,000)
+- 1 unsigned int *k* (4 bytes, 0 <= k <= 100,000)
+- 1 double *b* (8 bytes, 0 <= b <= 1)
+
+Optional:
+
+- 1 double *s* (8 bytes, -100,000 <= s <= 100,000)
+
+Output:
+
+
+
 
 <input1> in a binary file, 28 Bytes in size, with the following representation:
 
