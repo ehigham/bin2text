@@ -39,7 +39,7 @@ There are three build target configurations available: all, debug, clean [defaul
 [user@hostname]~bin2text$ make [target]
 ```
 
-## Usage
+### Usage
 
 The program is intended as a command line application, whose usage is as follows:
 
@@ -151,8 +151,11 @@ For example, if b=0.01, and the scores in the input file are 0.0100, 0.0120, 0.0
 1
 ```
 
-
-End with an example of getting some data out of the system or using it for a little demo
+### Example Usage
+```
+#!bash
+[user@hostname]~/bin2text$ ./run -n 1024 -k 1024 input1 input2
+```
 
 ## Running the tests
 
