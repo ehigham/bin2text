@@ -35,6 +35,10 @@ Input File Specifications:
 Input file 1:
 This binary file gives information about the main binary file. It is exactly 28 bytes.
 
+```
+#!text
+
+
 type          | bytes       | field     | description
 -----------------------------------------------------
 signed int    | 4           | 0         | zero
@@ -44,9 +48,14 @@ unsigned long | 8           | n_tups    | number of tuples
 double        | 8           | avg       | average of all scores
 ----------------------------------------------------------------
               | 28 bytes total
+```
+
 
 Input file 2:
 This is the main input file. It's size is determined by the values in the first binary file.
+
+```
+#!text
 
 type          | bytes       | field     | description
 -----------------------------------------------------
@@ -59,6 +68,8 @@ int[]         | d*4         | tlast     | last tuple
 double        | 8           | tlast_s   | last tuple score
 -----------------------------------------------------------
               | n_tups*((4*d)+8) bytes total
+
+```
 
 Every int in a tuple vector will be in the range [0,n_vars-1]. There will be no duplicate values in a tuple, which means n_tups <= nCr(n_vars, d). There is no ordering of the values within a tuple, and no ordering across all tuples. The dimension of each tuple will be between 2 and 8. (2 <= d <= 8). 
 
@@ -76,7 +87,10 @@ Similar to out1.txt. Text file containing n tuples, with the lowest score, sorte
 
 For out1.txt and out2.txt, tuples are printed 1 per line, values separated by a tab, and the score of the tuple at the end with 10 digits beyond the decimal points. For example, a tuple of dimension 3, with the variables 4 5 and 6 and a score of 0.01 would look like:
 
+```
+#!text
 4    5    6    0.0100000000
+```
 
 out3.txt: sorted tuples by variable
 
@@ -88,6 +102,8 @@ The first line of this file will be the minimum and maximum score in the file, r
 
 For example, if b=0.01, and the scores in the input file are 0.0100, 0.0120, 0.0299, 0.0300, 0.0310, 0.060, 0.100 then the output file should have 11 lines total and look like.
 
+```
+#!text
 0.0100000000    0.1000000000
 2
 1
@@ -99,6 +115,7 @@ For example, if b=0.01, and the scores in the input file are 0.0100, 0.0120, 0.0
 0
 0
 1
+```
 
 The sum of the numbers in each line (excluding first line) should equal total number of tuples in the input file (n_tups).
 Note that there are 10 bins: [0.01, 0.02), [0.02, 0.03), ..., [0.09, 0.10), [0.10, 0.11). There is a need for the 10th bin in order to include the border value 0.100, which is not included in the 9th bin.
@@ -121,16 +138,10 @@ Command Line options:
 
 - The software should use the command line options as used in the demo application:
 
-```
-Usage:   run [options] <input1> <input2>
-Options:
-         -n INT    number of sorted tuples for out1.txt and out2.txt
-         -k INT    number of sorted tuples for out3.txt
-         -b FLOAT  bin width for out4.txt
-         -s FLOAT  number of standard deviations for out5.txt
-```
+
 For threads we could have such option:
 ``` 
+#!bash
          -t INT  number of threads
 ```
 If you use threads, you should choose what you consider the best configuration, and use it as the default configuration if the -t command line option is not used. Please mention in the documentation which is the default value. If you do use threads, you may suggest some other option you think might be better, and we'll test with that option also.
@@ -164,27 +175,47 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisities
 
-What things you need to install the software and how to install them
+This project was developed and tested on x86\_64 GNU/Linux (Linux 4.5.0) with the following configuration
 
 ```
-Give examples
+gcc-5.3.0 
+glibc-2.32
+gmake-4.1
 ```
+
+This project has no dependencies on 3rd party libraries other than those shipped with gcc-5.3.0.
+
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Stay what the step will be
+Clone the repository to your preferred directory:
 
 ```
-Give the example
+#!bash
+[user@hostname]~$ git clone <URL> && cd bin2text
 ```
 
-And repeat
+There are three build target configurations available: all, debug, clean [default: all]. Invoke the build system with gmake:
 
 ```
-until finished
+#!bash
+[user@hostname]~bin2text$ make [target]
 ```
+
+## Usage
+
+The usage of the program is as follows:
+
+```
+#!bash
+Usage:   run [options] <input1> <input2>
+Options:
+         -n INT    number of sorted tuples for out1.txt and out2.txt
+         -k INT    number of sorted tuples for out3.txt
+         -b FLOAT  bin width for out4.txt
+         -s FLOAT  number of standard deviations for out5.txt
+```
+
 
 End with an example of getting some data out of the system or using it for a little demo
 
@@ -224,7 +255,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [git](https://git-scm.com/) for versioning. 
 
 ## Authors
 
