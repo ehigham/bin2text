@@ -165,7 +165,7 @@ For example, if b=0.01, and the scores in the input file are 0.0100, 0.0120, 0.0
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENCE.md](LICENCE.md) file for details
 
 ## Acknowledgments
 
