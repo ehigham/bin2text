@@ -31,6 +31,7 @@
 #include "../run.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/stat.h>
 
 struct output_filenames
 {

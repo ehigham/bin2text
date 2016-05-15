@@ -26,11 +26,13 @@ This project has no dependencies on 3rd party libraries other than those shipped
 
 ### Installing
 
-Clone the repository to your preferred directory:
+Unzip the zip file to your preferred directory and move into the project directory:
 
 ```
 #!bash
-[user@hostname]~$ git clone <URL> && cd bin2text
+[user@hostname]~$ unzip bin2text.zip
+[user@hostname]~$ cd bin2text
+
 ```
 
 There are three build target configurations available: all, debug, clean [default: all]. Invoke the build system with gmake:
@@ -172,5 +174,13 @@ This project is licensed under the MIT License - see the [LICENCE.md](LICENCE.md
 * Caffeine
 * Alcohol
 * Nicotine
+* Vim
 
 ## Known Issues
+
+* The total average scoring for variable might overflow if the variable is refered too many times.
+
+## Ways of Improvement
+
+* Add multi-threading support to sorting algorithm
+* Replace the variable global score computation overflow assertion by a better mechanism (list).

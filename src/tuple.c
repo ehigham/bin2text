@@ -278,6 +278,6 @@ void write_scoring_histogram(FILE * const __restrict out4,
       ++counter;
       ++i_tuples;
     }
-    fprintf(out4, "%d\n", counter);
+    fprintf(out4, "%ld\n", counter);
   }
 }

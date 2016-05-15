@@ -61,13 +61,19 @@ void fill_vars(const uint64_t n_tuples,
                const size_t k,
                const size_t nvar)
 {
-
+  // Get count
   for(size_t i_tuple=0; i_tuple < n_tuples; ++i_tuple)
     for(size_t i=0; i < d; ++i)
     {
       var_t var_index = lookup_tuple[i_tuple].values[i];
-      lookup_var[var_index].avg += lookup_tuple[i_tuple].avg; // TODO: overflow risk
       ++lookup_var[var_index].count;
+    }
+  // Compute AVG
+  for(size_t i_tuple=0; i_tuple < n_tuples; ++i_tuple)
+    for(size_t i=0; i < d; ++i)
+    {
+      var_t var_index = lookup_tuple[i_tuple].values[i];
+      lookup_var[var_index].avg += lookup_tuple[i_tuple].avg/lookup_var[var_index].count; // TODO: overflow risk
     }
 
   size_t beg = 0, end = n_tuples-1;
@@ -97,11 +103,6 @@ void fill_vars(const uint64_t n_tuples,
     ++beg;
     --end;
   }
-
-  // normalize avg for each var
-  for(size_t i=0; i < nvar; ++i)
-    lookup_var[i].avg /= (double)lookup_var[i].count;
-
 }
 
 void write_var_avg_and_participation(FILE* out3,

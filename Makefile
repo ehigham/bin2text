@@ -24,9 +24,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-CLFLAGS=-std=c11 $(INLINE_WARN) $(INLINE_LIMIT) -pthread -Wall -Wextra -Wconversion
-OPTIM = -O3 -march=native -DNDEGUG
-DEBUG = -O0 -g
+CLFLAGS=-std=c11 $(INLINE_WARN) $(INLINE_LIMIT) -pthread -Wall
+OPTIM = -O3 -march=native -DNDEGUG 
+DEBUG = -O0 -g -Wall -Wextra -Wconversion
 GPP=gcc
 BASEDIR=.
 OBJDIR=$(BASEDIR)/obj
