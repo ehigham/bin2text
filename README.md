@@ -36,6 +36,7 @@ Input file 1:
 This binary file gives information about the main binary file. It is exactly 28 bytes.
 
 ```
+
 type          | bytes       | field     | description
 -----------------------------------------------------
 signed int    | 4           | 0         | zero
@@ -45,10 +46,13 @@ unsigned long | 8           | n_tups    | number of tuples
 double        | 8           | avg       | average of all scores
 ----------------------------------------------------------------
               | 28 bytes total
+
 ```
 
 Input file 2:
 This is the main input file. It's size is determined by the values in the first binary file.
+
+```
 
 type          | bytes       | field     | description
 -----------------------------------------------------
@@ -61,6 +65,8 @@ int[]         | d*4         | tlast     | last tuple
 double        | 8           | tlast_s   | last tuple score
 -----------------------------------------------------------
               | n_tups*((4*d)+8) bytes total
+
+```
 
 Every int in a tuple vector will be in the range [0,n_vars-1]. There will be no duplicate values in a tuple, which means n_tups <= nCr(n_vars, d). There is no ordering of the values within a tuple, and no ordering across all tuples. The dimension of each tuple will be between 2 and 8. (2 <= d <= 8). 
 
@@ -78,7 +84,9 @@ Similar to out1.txt. Text file containing n tuples, with the lowest score, sorte
 
 For out1.txt and out2.txt, tuples are printed 1 per line, values separated by a tab, and the score of the tuple at the end with 10 digits beyond the decimal points. For example, a tuple of dimension 3, with the variables 4 5 and 6 and a score of 0.01 would look like:
 
+```
 4    5    6    0.0100000000
+```
 
 out3.txt: sorted tuples by variable
 
