@@ -1,6 +1,6 @@
-# Makefile for bin2text
+# Makefile for bin2text tests
 #
-# Defines the build configuration targets and recipes thereof
+# Defines the build configuration targets and recipes thereof for bin2text tests
 #
 # MIT License
 # 
@@ -32,7 +32,6 @@ BASEDIR=.
 OBJDIR=$(BASEDIR)/obj
 BIN=$(BASEDIR)
 SRCDIR=src
-RESDIR=$(SRCDIR)/resource
 LIBCINC= -I.
 LIBLINC= -L. 
 LIBLINK= -lm #-lgsl -lgslcblas #-lgmp -lmpfr
@@ -52,24 +51,15 @@ OBJS=$(OBJDIR)/strings.o \
 ##############################################################################
 #EXECUTABLES: add executables rules here
 
-.PHONY: release all test debug
-
-release: CFLAGS +=$(OPTIM)
-release: search
-	@echo "release: build successful"
-
-all: CFLAGS += $(OPTIM)
-all: search
-all: test
-	@echo "all: build successful"
+.PHONY: debug release
 
 debug: CFLAGS += $(DEBUG)
 debug: search
 	@echo "debug: build successful"
 
-
-test:
-	make -f test/Makefile
+release: CFLAGS += $(OPTIM)
+release: search
+	@echo "release: build successful"
 
 search: $(OBJDIR)/search.oo
 	cp $(OBJDIR)/search.oo $(BIN)/run
