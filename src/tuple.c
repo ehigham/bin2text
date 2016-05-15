@@ -273,7 +273,7 @@ void write_scoring_histogram(FILE * const __restrict out4,
     // ntuples
     while(i_tuples < ntuples && lookup_tuple[i_tuples].avg < max_bound)
     {
-      if(fabs(lookup_tuple[i_tuples].avg - max_bound) < DBL_EPSILON)
+      if(fabs(max_bound - lookup_tuple[i_tuples].avg) < FLT_EPSILON)
         break;
       ++counter;
       ++i_tuples;
