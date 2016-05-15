@@ -55,7 +55,7 @@ Options:
 
 Input:
 
-- 2 binary files, **<input1>** and **<input2>** format described below
+- 2 binary files, **<input1>** and **<input2>**; format described below
 - 1 unsigned int **n** (4 bytes, 0 <= n <= 1,000,000)
 - 1 unsigned int **k** (4 bytes, 0 <= k <= 100,000)
 - 1 double **b** (8 bytes, 0 <= b <= 1)
@@ -63,6 +63,13 @@ Input:
 Optional:
 
 - 1 double **s** (8 bytes, -100,000 <= s <= 100,000)
+
+
+Output:
+
+- 4 or 5 ASCII text files in the current directory, depending on which Options are specified.
+
+### Input Detail
 
 **<input1>** in a binary file with the following representation:
 
@@ -99,6 +106,15 @@ double        | 8           | tlast_s   | last tuple score
               | n_tups*((4*d)+8) bytes total
 
 ```
+
+### Output Detail
+
+NOTE: IF ANY OF THESE FILES EXISTS PRIOR TO EXECUTION, THE PROGRAM WILL ERROR AND QUIT.
+
+**out1.txt** - text file containing **n** tuples with the highest score, sorted by maximum score. If **n**=0, this file is not touched.
+**out2.txt** - text file containing **n** tuples with the lowest score, sorted by minimum score. If **n**=0, this file is not touched.
+
+
 
 End with an example of getting some data out of the system or using it for a little demo
 
