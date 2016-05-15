@@ -36,7 +36,7 @@ There are three build target configurations available: all, debug, clean [defaul
 
 ```
 #!bash
-[user@hostname]~bin2text$ make [target]
+[user@hostname]~/bin2text$ make [target]
 ```
 
 ### Usage
