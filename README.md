@@ -1,4 +1,4 @@
-## bin2text ##
+## bin2text
 This software aims at providing a solution to the following problem:
 ## 
 THE GATES FOUNDATION - BINARY TO TEXT SOFTWARE PERFORMANCE CHALLENGE IN C ##
@@ -184,19 +184,34 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisities
 
-What things you need to install the software and how to install them
+This project was developed and tested on x86\_64 GNU/Linux (Linux 4.5.0) with the following configuration
 
 ```
-Give examples
+gcc-5.3.0 
+glibc-2.32
+gmake-4.1
 ```
+
+This project has no dependencies on 3rd party libraries other than those shipped with gcc-5.3.0.
+
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Stay what the step will be
+Clone the repository to your preferred directory:
 
 ```
+#!bash
+[user@hostname]~/$ git clone <URL> && cd bin2text
+```
+
+There are three build target configurations available: [all][debug][clean]. Invoke them with gmake:
+
+```
+#!bash
+[user@hostname]~bin2text$ make <target>
+```
+
+
 Give the example
 ```
 
@@ -244,7 +259,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [git](https://git-scm.com/) for versioning. 
 
 ## Authors
 
