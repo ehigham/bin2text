@@ -15,6 +15,7 @@ These instructions will get you a copy of the project up and running on your loc
 This project was developed and tested on x86\_64 GNU/Linux (Linux 4.5.0) with the following configuration
 
 ```
+#!text
 gcc-5.3.0 
 glibc-2.32
 gmake-4.1
@@ -28,14 +29,14 @@ This project has no dependencies on 3rd party libraries other than those shipped
 Clone the repository to your preferred directory:
 
 ```
-#!bash
+#!/bin/bash
 [user@hostname]~$ git clone <URL> && cd bin2text
 ```
 
 There are three build target configurations available: all, debug, clean [default: all]. Invoke the build system with gmake:
 
 ```
-#!bash
+#!/bin/bash
 [user@hostname]~/bin2text$ make [target]
 ```
 
@@ -44,7 +45,7 @@ There are three build target configurations available: all, debug, clean [defaul
 The program is intended as a command line application, whose usage is as follows:
 
 ```
-#!bash
+#!/bin/bash
 Usage:   run [options] <input1> <input2>
 Options:
          -n INT    number of sorted tuples for out1.txt and out2.txt [default: 0]
