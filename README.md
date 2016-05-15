@@ -154,7 +154,7 @@ For example, if b=0.01, and the scores in the input file are 0.0100, 0.0120, 0.0
 ### Example Usage
 ```
 #!bash
-[user@hostname]~/bin2text$ ./run -n 1024 -k 1024 input1 input2
+[user@hostname]~/bin2text$ ./run -n 1024 -k 64 input1 input2
 ```
 
 ## Running the tests
