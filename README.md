@@ -35,6 +35,7 @@ Input File Specifications:
 Input file 1:
 This binary file gives information about the main binary file. It is exactly 28 bytes.
 
+```
 type          | bytes       | field     | description
 -----------------------------------------------------
 signed int    | 4           | 0         | zero
@@ -44,6 +45,7 @@ unsigned long | 8           | n_tups    | number of tuples
 double        | 8           | avg       | average of all scores
 ----------------------------------------------------------------
               | 28 bytes total
+```
 
 Input file 2:
 This is the main input file. It's size is determined by the values in the first binary file.
