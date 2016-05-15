@@ -40,7 +40,7 @@ There are three build target configurations available: all, debug, clean [defaul
 [user@hostname]~/bin2text$ make [target]
 ```
 
-### Usage
+## Usage
 
 The program is intended as a command line application, whose usage is as follows:
 
