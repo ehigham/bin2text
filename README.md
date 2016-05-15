@@ -109,7 +109,7 @@ double        | 8           | tlast_s   | last tuple score
 
 ### Output Detail
 
-NOTE: IF ANY OF THESE FILES EXISTS PRIOR TO EXECUTION, THE PROGRAM WILL ERROR AND QUIT.
+NOTE: IF ANY OF THESE FILES EXIST PRIOR TO EXECUTION, THE PROGRAM WILL PRINT TO STDERR AND RETURN.
 
 **out1.txt** - top tuples sorted:
 
