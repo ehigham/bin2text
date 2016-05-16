@@ -25,7 +25,7 @@
 # SOFTWARE.
 
 CLFLAGS=-std=c11 $(INLINE_WARN) $(INLINE_LIMIT) -pthread -Wall
-OPTIM = -O3 -march=native -DNDEGUG 
+OPTIM = -O3 -march=native -DNDEBUG 
 DEBUG = -O0 -g -Wall -Wextra -Wconversion
 GPP=gcc
 BASEDIR=.
