@@ -42,6 +42,14 @@ There are three build target configurations available: all, debug, clean [defaul
 [user@hostname]~/bin2text$ make [target]
 ```
 
+Please think about updating the test symbolic link to your test folder:
+
+```
+#!bash
+[user@hostname]~/bin2text$ rm test && ln -s ../path/to/test
+```
+
+
 ## Usage
 
 The program is intended as a command line application, whose usage is as follows:

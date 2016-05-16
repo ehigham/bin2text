@@ -151,7 +151,8 @@ uint64_t count_tuples_bin_cutoff(FILE * const __restrict fout5,
       while(i_tuple < n_tuples  // unsigned, will never be lower than 0
             && ((next = lookup_tuple[i_tuple].avg) >= cutoff))
       {
-        for (size_t i = 0; i < d; i++)
+        fprintf(fout5, "%d\t%d\t", lookup_tuple[i_tuple].values[0], lookup_tuple[i_tuple].values[1]);
+        for (size_t i = 2; i < d; ++i)
           fprintf(fout5,"%d\t",lookup_tuple[i_tuple].values[i]);
         fprintf(fout5, PRINT_PRC_D,next,'\t');
         fprintf(fout5, PRINT_PRC_D,fabs(next-average)/std, '\n');
@@ -167,10 +168,9 @@ uint64_t count_tuples_bin_cutoff(FILE * const __restrict fout5,
       // if next score is in the tail
       if ((!(d%2) && (next >= cutoff)) || ((d%2) && (next <= cutoff))) 
       {
-        //TODO: inefficient, need different types for different d
-        for (size_t i = 0; i < d; i++)
+        fprintf(fout5, "%d\t%d\t", lookup_tuple[i_tuple].values[0], lookup_tuple[i_tuple].values[1]);
+        for (size_t i = 2; i < d; ++i)
           fprintf(fout5,"%d\t",lookup_tuple[i_tuple].values[i]);
-
         fprintf(fout5, PRINT_PRC_D,next,'\t');
         fprintf(fout5, PRINT_PRC_D,fabs(next-average)/std, '\n');
         c++;
@@ -192,7 +192,7 @@ double calculate_std_bin(double average,
   double min = DBL_MAX;
   double max = -DBL_MAX;
   // TODO: hard code types for different values of d
-  if(lookup_tuple_sorted)
+  if(!lookup_tuple_sorted)
   {
     for(size_t i_tuple=0; i_tuple < n_tuples; ++i_tuple)
     {
